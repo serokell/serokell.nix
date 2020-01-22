@@ -1,0 +1,9 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files: nix/sources.nix
+Copyright: 2019 Nicolas Mattia
+License: LicenseRef-MIT-nmattia
+
+Files: nix/sources.json
+Copyright: 2020 Serokell <https://serokell.io/>
+License: MPL-2.0
