@@ -13,7 +13,7 @@
       gitignore0 = gitignore;
     in let
       pkgs = nixpkgs {};
-      gitignore = gitignore0 {};
+      gitignore = gitignore0 { lib = pkgs.lib; };
     in {
       overlay = import ./overlay { inherit pkgs; };
       lib = import ./lib { inherit pkgs gitignore; };
