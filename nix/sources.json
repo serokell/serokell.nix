@@ -1,14 +1,14 @@
 {
-    "gitignore": {
+    "haskell-nix": {
         "branch": "master",
-        "description": "Nix function for filtering local git sources",
-        "homepage": "",
-        "owner": "hercules-ci",
-        "repo": "gitignore",
-        "rev": "f9e996052b5af4032fe6150bba4a6fe4f7b9d698",
-        "sha256": "0jrh5ghisaqdd0vldbywags20m2cxpkbbk5jjjmwaw0gr8nhsafv",
+        "description": "Alternative Haskell Infrastructure for Nixpkgs",
+        "homepage": "https://input-output-hk.github.io/haskell.nix",
+        "owner": "input-output-hk",
+        "repo": "haskell.nix",
+        "rev": "9643db390128f2de9e9cec14f73687139a28c197",
+        "sha256": "1mc9w8dzhxj1ar0qzaahlrx8b6c5d1b0s0ragpjah3dbb74ni0jk",
         "type": "tarball",
-        "url": "https://github.com/hercules-ci/gitignore/archive/f9e996052b5af4032fe6150bba4a6fe4f7b9d698.tar.gz",
+        "url": "https://github.com/input-output-hk/haskell.nix/archive/9643db390128f2de9e9cec14f73687139a28c197.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
