@@ -17,9 +17,10 @@
   # src: directory to clean. This is typically `./.`.
   cleanGit = name: src:
     haskell-nix.lib.cleanGit {
-      src = haskell-nix.lib.cleanSourceWith {
-        inherit name src;
-      };
+      # For now, we'll use an unsafe operation
+      # FIXME: We probably want to update upstream.
+      src = builtins.unsafeDiscardStringContext
+        (haskell-nix.lib.cleanSourceWith { inherit name src; });
     };
 
   # Restrict the source to only a subdirectory.
