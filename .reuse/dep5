@@ -7,3 +7,7 @@ License: LicenseRef-MIT-nmattia
 Files: nix/sources.json
 Copyright: 2020 Serokell <https://serokell.io/>
 License: MPL-2.0
+
+Files: tests/lib-src/test-*
+Copyright: 2020 Serokell <https://serokell.io/>
+License: MPL-2.0
