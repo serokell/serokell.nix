@@ -7,15 +7,11 @@
 
   description = "Serokell Nix infrastructure library";
 
-  outputs = { self, nixpkgs, gitignore }:
+  outputs = { self, nixpkgs, haskell-nix }:
     let
-      # rename
-      gitignore0 = gitignore;
-    in let
       pkgs = nixpkgs {};
-      gitignore = gitignore0 { lib = pkgs.lib; };
     in {
       overlay = import ./overlay { inherit pkgs; };
-      lib = import ./lib { inherit pkgs gitignore; };
+      lib = import ./lib { inherit pkgs haskell-nix; };
     };
 }
