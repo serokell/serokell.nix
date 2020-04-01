@@ -6,4 +6,5 @@
 
 {
   src = import ./src.nix { inherit haskell-nix; };
+  nixos = import ./nixos.nix { inherit pkgs; };
 }
