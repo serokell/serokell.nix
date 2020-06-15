@@ -7,6 +7,7 @@ let inherit (self.lib.src) cleanGit; in {
     githubSrc = builtins.fetchGit {
       url = "https://github.com/serokell/serokell.nix";
       rev = commit;
+      ref = "flakes";
     };
   in (toString (cleanGit "serokell.nix" githubSrc))
   == (toString (cleanGit "serokell.nix" ../.));
