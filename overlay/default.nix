@@ -2,13 +2,7 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-{ pkgs }:
-
-let
-  inherit (pkgs.lib) concatStringsSep;
-in
-
-final: _prev: {
+final: prev: {
   build = {
     /*
     * Run a series of commands only for their exit status.
@@ -35,14 +29,14 @@ final: _prev: {
 
     haskell = {
       hlint = src: final.runCommand "hlint.html" {} ''
-        ${pkgs.hlint}/bin/hlint "${src}" --no-exit-code --report=$out -j
+        ${final.hlint}/bin/hlint "${src}" --no-exit-code --report=$out -j
       '';
 
       haddock = name: docs:
         let
           globs = map (doc: "${doc}/share/doc/*") docs;
         in final.runCommand "${name}-haddock.tar.gz" {} ''
-          for drv in ${concatStringsSep " " globs}; do
+          for drv in ${final.concatStringsSep " " globs}; do
             ln -s "$drv"/html $(basename "$drv")
           done
 

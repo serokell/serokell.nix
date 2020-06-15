@@ -1,10 +1,9 @@
-let pkgs = import (import ../nix/sources.nix).nixpkgs { };
-in with import ../.;
-with lib.src; {
+{ self ? import ../., lib ? self.inputs.nixpkgs.lib }:
+let inherit (self.lib.src) cleanGit; in {
   no-hash-mismatch = (toString (cleanGit "test" ./test-foo))
     == (toString (cleanGit "test" ./test-bar));
   cleans-git = let
-    commit = pkgs.lib.commitIdFromGitRepo ../.git;
+    commit = lib.commitIdFromGitRepo ../.git;
     githubSrc = builtins.fetchGit {
       url = "https://github.com/serokell/serokell.nix";
       rev = commit;

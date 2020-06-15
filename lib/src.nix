@@ -6,7 +6,7 @@
 # Working with sources
 ###
 
-{ haskell-nix }:
+{ lib, gitignore-nix }:
 
 {
   # Clean the source to leave only files tracked by git.
@@ -16,12 +16,10 @@
   #       but this way we guarantee no unexpected issues with caching.
   # src: directory to clean. This is typically `./.`.
   cleanGit = name: src:
-    haskell-nix.lib.cleanGit {
-      # For now, we'll use an unsafe operation
-      # FIXME: We probably want to update upstream.
-      src = builtins.unsafeDiscardStringContext
-        (haskell-nix.lib.cleanSourceWith { inherit name src; });
-    };
+    gitignore-nix.gitignoreSource (lib.cleanSourceWith {
+      inherit name;
+      src = builtins.unsafeDiscardStringContext src;
+    });
 
   # Restrict the source to only a subdirectory.
   #
@@ -46,7 +44,7 @@
   # ```
   subdir = subDir: src:
     # Doesn't actually clean anything but composes well with `cleanGit`.
-    haskell-nix.lib.cleanSourceWith {
+    lib.cleanSourceWith {
       inherit src;
       inherit subDir;
     };

@@ -1,26 +1,14 @@
 {
-    "haskell-nix": {
+    "flake-compat": {
         "branch": "master",
-        "description": "Alternative Haskell Infrastructure for Nixpkgs",
-        "homepage": "https://input-output-hk.github.io/haskell.nix",
-        "owner": "input-output-hk",
-        "repo": "haskell.nix",
-        "rev": "9643db390128f2de9e9cec14f73687139a28c197",
-        "sha256": "1mc9w8dzhxj1ar0qzaahlrx8b6c5d1b0s0ragpjah3dbb74ni0jk",
+        "description": null,
+        "homepage": null,
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "f012cc5092f01fc67d5cd6f04999f964c3e05cbf",
+        "sha256": "1n8q7v7alq802kl3b6zan6v27whi2ppbnlv8df6cz64vqf658ija",
         "type": "tarball",
-        "url": "https://github.com/input-output-hk/haskell.nix/archive/9643db390128f2de9e9cec14f73687139a28c197.tar.gz",
-        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    },
-    "nixpkgs": {
-        "branch": "master",
-        "description": "Pinned Nixpkgs tree (master follows nixos-unstable-small, only tags have stable history)",
-        "homepage": "",
-        "owner": "serokell",
-        "repo": "nixpkgs",
-        "rev": "952430bc48523c56bc9763061dba34a23c9d27f4",
-        "sha256": "1058z6zd8g05c57k90mhhkad7ccc4a3zia6mg9f3sbixvdsrbzik",
-        "type": "tarball",
-        "url": "https://github.com/serokell/nixpkgs/archive/952430bc48523c56bc9763061dba34a23c9d27f4.tar.gz",
+        "url": "https://github.com/edolstra/flake-compat/archive/f012cc5092f01fc67d5cd6f04999f964c3e05cbf.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }

@@ -2,8 +2,8 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-{ pkgs, haskell-nix }:
+{ lib, gitignore-nix }:
 
 {
-  src = import ./src.nix { inherit haskell-nix; };
+  src = import ./src.nix { inherit lib gitignore-nix; };
 }
