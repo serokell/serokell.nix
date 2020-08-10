@@ -4,6 +4,6 @@ Files: nix/sources.nix
 Copyright: 2019 Nicolas Mattia
 License: LicenseRef-MIT-nmattia
 
-Files: nix/sources.json
+Files: nix/sources.json flake.lock
 Copyright: 2020 Serokell <https://serokell.io/>
 License: MPL-2.0

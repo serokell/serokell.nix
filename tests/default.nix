@@ -1,13 +1,17 @@
-let pkgs = import (import ../nix/sources.nix).nixpkgs { };
-in with import ../.;
-with lib.src; {
+# SPDX-FileCopyrightText: 2020 Serokell <https://serokell.io/>
+#
+# SPDX-License-Identifier: MPL-2.0
+
+{ self ? import ../., lib ? self.inputs.nixpkgs.lib }:
+let inherit (self.lib.src) cleanGit; in {
   no-hash-mismatch = (toString (cleanGit "test" ./test-foo))
     == (toString (cleanGit "test" ./test-bar));
   cleans-git = let
-    commit = pkgs.lib.commitIdFromGitRepo ../.git;
+    commit = lib.commitIdFromGitRepo ../.git;
     githubSrc = builtins.fetchGit {
       url = "https://github.com/serokell/serokell.nix";
       rev = commit;
+      ref = "flakes";
     };
   in (toString (cleanGit "serokell.nix" githubSrc))
   == (toString (cleanGit "serokell.nix" ../.));
