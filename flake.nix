@@ -32,7 +32,7 @@
     };
 
     nixosModules = {
-      common = import ./common.nix;
+      common = import ./modules/common.nix;
 
       defaults = { lib, pkgs, ... }: {
         services.mysql.package = lib.mkOptionDefault pkgs.mariadb;
