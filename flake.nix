@@ -51,7 +51,6 @@
       oauth2_proxy = import ./modules/services/oauth2_proxy.nix;
       oauth2_proxy_nginx = import ./modules/services/oauth2_proxy_nginx.nix;
       podman-autoprune = import ./modules/services/podman-autoprune.nix;
-      secrets = import ./modules/services/secrets.nix;
       upload-daemon = import ./modules/services/upload-daemon.nix;
     };
   };
