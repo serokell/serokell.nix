@@ -73,7 +73,7 @@
 
   users.mutableUsers = false;
 
-  nix.nixPath = [
-    "nixpkgs=${pkgs.path}:nixos-config=/etc/nixos/configuration.nix:/nix/var/nix/profiles/per-user/root/channels"
-  ];
+  nix.nixPath = options.nix.nixPath.default ++ [ "nixpkgs=/etc/nix/nixpkgs" "nixpkgs-overlays=/etc/nix/overlays.nix" ];
+  environment.etc."nix/nixpkgs".source = pkgs.path;
+  environment.etc."nix/overlays.nix".source = ./overlay/default.nix;
 }
