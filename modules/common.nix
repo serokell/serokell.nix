@@ -41,7 +41,6 @@
 
   programs.mosh.enable = true;
 
-  # TODO: setup Bastion server
   security.sudo.wheelNeedsPassword = false;
 
   services.nginx = {
