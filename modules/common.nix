@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-{ lib, pkgs, config, ... }:
+{ lib, pkgs, config, options, ... }:
 
 {
   imports = [ ./nginx-vhosts.nix ];
