@@ -45,7 +45,6 @@
       serokell-users = import ./modules/serokell-users.nix;
       hackage-search = import ./modules/services/hackage-search.nix;
       hermetic = import ./modules/services/hermetic.nix;
-      matomo = import ./modules/services/matomo.nix;
       mtproxy = import ./modules/services/mtproxy.nix;
       nginx = import ./modules/services/nginx.nix;
       oauth2_proxy = import ./modules/services/oauth2_proxy.nix;
