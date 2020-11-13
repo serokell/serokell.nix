@@ -1,0 +1,4 @@
+steps:
+  - label: Check Nix flake
+    commands:
+      - nix-shell -p nixUnstable --run 'nix flake check'
