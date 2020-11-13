@@ -8,7 +8,7 @@ with lib;
 let
   cfg = config.serokell-users;
   allUsers = cfg.wheelUsers ++ cfg.regularUsers;
-  ssh-keys = import ../ssh-keys.nix;
+  ssh-keys = import ./ssh-keys.nix;
 
 in
 {
