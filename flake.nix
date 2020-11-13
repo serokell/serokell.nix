@@ -54,6 +54,9 @@
       podman-autoprune = import ./modules/services/podman-autoprune.nix;
       upload-daemon = import ./modules/services/upload-daemon.nix;
     };
+
+    # Required for CI to load nixUnstable for running checks
+    legacyPackages = nixpkgs.legacyPackages;
   } // flake-utils.lib.eachDefaultSystem (system: {
     packages =
       let pkgs = import nixpkgs {
