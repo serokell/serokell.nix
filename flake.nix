@@ -17,13 +17,15 @@
 
     hermetic.url = "github:serokell/hermetic/flake";
 
+    flake-utils.url = "github:numtide/flake-utils";
+
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
     };
   };
 
-  outputs = { self, nixpkgs, gitignore-nix, ... }@inputs: {
+  outputs = { self, nixpkgs, gitignore-nix, flake-utils, ... }@inputs: ({
     overlay = import ./overlay inputs;
 
     lib = import ./lib {
@@ -52,5 +54,12 @@
       podman-autoprune = import ./modules/services/podman-autoprune.nix;
       upload-daemon = import ./modules/services/upload-daemon.nix;
     };
-  };
+  } // flake-utils.lib.eachDefaultSystem (system: {
+    packages =
+      let pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [ self.overlay ];
+      }; in { inherit (pkgs) mtproxy oauth2_proxy youtrack scratch; };
+  }));
 }

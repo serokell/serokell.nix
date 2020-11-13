@@ -5,6 +5,7 @@ ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/.."
 
 REL=$(curl --silent 'https://data.services.jetbrains.com/products/releases?code=YTD&latest=true&type=release&build=' | jq '.YTD[0]')
 
+VERSION=$(echo "$REL" | jq -r '"\(.version).\(.build)"')
 URL=$(echo "$REL" | jq -r '.downloads.javaEE.link')
 HASH_URL=$(echo "$REL" | jq -r '.downloads.javaEE.checksumLink')
 NOTES_LINK=$(echo "$REL" | jq -r '.notesLink')
@@ -22,7 +23,7 @@ git fetch origin
 git checkout -B "upd-youtrack-$URL" origin/master
 echo "updating from $CUR_URL to $URL"
 echo "RELEASE NOTES: $NOTES_LINK"
-echo "$(jq ".url = \"$URL\" | .sha256 = \"$HASH\"" < $ROOT/overlay/youtrack_rev.json)" > $ROOT/overlay/youtrack_rev.json
+echo "$(jq ".version = \"$VERSION\" | .url = \"$URL\" | .sha256 = \"$HASH\"" < $ROOT/overlay/youtrack_rev.json)" > $ROOT/overlay/youtrack_rev.json
 git add ./overlay/youtrack_rev.json
 git commit -m "youtrack: $CUR -> $URL
 
