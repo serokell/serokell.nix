@@ -12,7 +12,7 @@ stdenv.mkDerivation rec {
   name = "youtrack-${version}";
 
   jar = builtins.fetchurl {
-    url = "https://download.jetbrains.com/charisma/youtrack-${version}.jar";
+    url = rev.url;
     sha256 = rev.sha256;
   };
 
