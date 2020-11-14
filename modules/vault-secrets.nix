@@ -50,7 +50,7 @@ let
 
         environmentFile = mkOption {
           type = with types; str;
-          default = "/root/vault-secrets.env.d/${name}";
+          default = "/root/vault-secrets.env.d/${if cfg.approlePrefix != null then "${cfg.approlePrefix}-${name}" else "${name}"}";
           example = "/root/service.sh";
           description = ''
             Path to a file that contains the necessary environment variables for
@@ -149,6 +149,14 @@ in
           Base Vault KV path to prepend to all KV paths, under
           <literal>vaultPathPrefix</literal>. Default for all secrets defined in
           the module.
+        '';
+      };
+
+      approlePrefix = mkOption {
+        type = with types; nullOr str;
+        default = null;
+        description = ''
+          Prepended to the secret name for resolving the default environmentFile path.
         '';
       };
 
