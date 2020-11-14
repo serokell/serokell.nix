@@ -50,7 +50,7 @@ let
 
         environmentFile = mkOption {
           type = with types; str;
-          default = "/root/vault-secrets.env.d/${name}";
+          default = "/root/vault-secrets.env.d/${cfg.approlePrefix}-${name}";
           example = "/root/service.sh";
           description = ''
             Path to a file that contains the necessary environment variables for
@@ -151,6 +151,14 @@ in
           the module.
         '';
       };
+
+      approlePrefix = mkOption {
+        type = with types; str;
+        default = "";
+        description = ''
+          Prepended to the secret name for resolving the environmentFile path.
+        '';
+      }
 
       outPathPrefix = mkOption {
         type = with types; str;
