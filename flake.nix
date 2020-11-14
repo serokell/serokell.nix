@@ -7,6 +7,7 @@
 
   inputs = {
     nixpkgs.url = "github:serokell/nixpkgs";
+    nix-unstable.url = "github:nixos/nix";
 
     gitignore-nix = {
       url = "github:hercules-ci/gitignore.nix";
@@ -54,15 +55,21 @@
       podman-autoprune = import ./modules/services/podman-autoprune.nix;
       upload-daemon = import ./modules/services/upload-daemon.nix;
     };
-
-    # Required for CI to load nixUnstable for running checks
-    legacyPackages = nixpkgs.legacyPackages;
-  } // flake-utils.lib.eachDefaultSystem (system: {
-    packages =
-      let pkgs = import nixpkgs {
+  } // flake-utils.lib.eachDefaultSystem (system:
+    let
+      pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
         overlays = [ self.overlay ];
-      }; in { inherit (pkgs) mtproxy oauth2_proxy youtrack scratch; };
+      };
+    in with pkgs; {
+      devShell = mkShell {
+        buildInputs = [
+          nixUnstable
+        ];
+      };
+      packages = {
+        inherit (pkgs) mtproxy oauth2_proxy youtrack scratch nixUnstable;
+      };
   }));
 }

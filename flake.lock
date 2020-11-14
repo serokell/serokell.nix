@@ -117,6 +117,22 @@
         "type": "github"
       }
     },
+    "lowdown-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1598695561,
+        "narHash": "sha256-gyH/5j+h/nWw0W8AcR2WKvNBUsiQ7QuxqSJNXAwV+8E=",
+        "owner": "kristapsdz",
+        "repo": "lowdown",
+        "rev": "1705b4a26fbf065d9574dce47a94e8c7c79e052f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kristapsdz",
+        "repo": "lowdown",
+        "type": "github"
+      }
+    },
     "mix-to-nix": {
       "flake": false,
       "locked": {
@@ -131,6 +147,25 @@
         "owner": "serokell",
         "ref": "transumption",
         "repo": "mix-to-nix",
+        "type": "github"
+      }
+    },
+    "nix-unstable": {
+      "inputs": {
+        "lowdown-src": "lowdown-src",
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1605199519,
+        "narHash": "sha256-CTlDvrO3PxRnsi7ITvkQiclA+o7XiJ2/V1RwmJrMhOc=",
+        "owner": "nixos",
+        "repo": "nix",
+        "rev": "258e5338d68c5d98090748bbbd49bd33a37c7954",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nix",
         "type": "github"
       }
     },
@@ -150,6 +185,21 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1602702596,
+        "narHash": "sha256-fqJ4UgOb4ZUnCDIapDb4gCrtAah5Rnr2/At3IzMitig=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "ad0d20345219790533ebe06571f82ed6b034db31",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "ref": "nixos-20.09-small",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1590126174,
         "narHash": "sha256-OLBpG2HW80zoQ8O0Z2+ZnSML6/gILwEVUMM8XZP3/vk=",
         "owner": "serokell",
@@ -163,7 +213,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_3": {
+    "nixpkgs_4": {
       "locked": {
         "lastModified": 1598385881,
         "narHash": "sha256-kBvSrVo9NrWlQEvMtjEx/TCEDQTAG1M8pxhyxj0PSyU=",
@@ -185,13 +235,14 @@
         "flake-utils": "flake-utils",
         "gitignore-nix": "gitignore-nix",
         "hermetic": "hermetic",
-        "nixpkgs": "nixpkgs_2",
+        "nix-unstable": "nix-unstable",
+        "nixpkgs": "nixpkgs_3",
         "scratch": "scratch"
       }
     },
     "scratch": {
       "inputs": {
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": "nixpkgs_4"
       },
       "locked": {
         "lastModified": 1598628702,

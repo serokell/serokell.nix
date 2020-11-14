@@ -12,6 +12,7 @@ in
   mtproxy = callPackage ./mtproxy { };
   # Uses sources.mix-to-nix and sources.gitignore
   hermetic = inputs.hermetic.defaultPackage.${final.system};
+  nixUnstable = inputs.nix-unstable.defaultPackage.${final.system};
 
   oauth2_proxy = callPackage ./oauth2_proxy { };
   youtrack = callPackage ./youtrack.nix { };
