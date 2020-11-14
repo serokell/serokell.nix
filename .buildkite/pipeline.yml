@@ -1,4 +1,4 @@
 steps:
   - label: Check Nix flake
     commands:
-      - nix-shell -A legacyPackages.x86_64-linux.nixUnstable --run 'nix flake check'
+      - nix-shell --run 'nix --experimental-features "nix-command flakes" flake check'
