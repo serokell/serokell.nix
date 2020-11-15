@@ -2,13 +2,12 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-#
-# nix-flakes shim
-#
-
-let
-  sources = builtins.removeAttrs (import ./nix/sources.nix) ["__functor"];
-
-  flake = import sources.flake-compat { src = ./.; };
-in
-flake.defaultNix
+(import (
+  let
+    lock = builtins.fromJSON (builtins.readFile ./flake.lock);
+  in fetchTarball {
+    url = "https://github.com/edolstra/flake-compat/archive/${lock.nodes.flake-compat.locked.rev}.tar.gz";
+    sha256 = lock.nodes.flake-compat.locked.narHash; }
+) {
+  src =  ./.;
+}).defaultNix

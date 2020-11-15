@@ -2,7 +2,23 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-final: prev: {
+inputs:
+
+final: prev:
+let
+  inherit (final) callPackage lib;
+in
+(prev.lib.mapAttrs' (name: package: { name = "scratch-${name}"; value = package; }) inputs.scratch.packages.${prev.system} // {
+  mtproxy = callPackage ./mtproxy { };
+  # Uses sources.mix-to-nix and sources.gitignore
+  hermetic = inputs.hermetic.defaultPackage.${final.system};
+  nixUnstable = inputs.nix-unstable.defaultPackage.${final.system};
+
+  oauth2_proxy = callPackage ./oauth2_proxy { };
+  youtrack = callPackage ./youtrack.nix { };
+
+  scratch = inputs.scratch.defaultPackage.${final.system};
+
   build = {
     /*
     * Run a series of commands only for their exit status.
@@ -44,4 +60,4 @@ final: prev: {
         '';
     };
   };
-}
+})
