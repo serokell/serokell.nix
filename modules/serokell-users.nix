@@ -49,5 +49,8 @@ in
 
     # give all users access to systemd logs
     users.groups.systemd-journal.members = allUsers;
+
+    # Allow users with sudo to modify the nix store
+    nix.trustedUsers = [ "root" "@wheel" ];
   };
 }
