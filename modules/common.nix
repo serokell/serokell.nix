@@ -20,11 +20,9 @@
 
   nix.autoOptimiseStore = true;
 
-  # Use Jupiter as binary substituter
-  nix.binaryCaches =
-    [ "https://cache.nixos.org" ]; # "http://172.20.0.19:5000" ];
-  nix.binaryCachePublicKeys =
-    [ "serokell-1:aIojg2Vxgv7MkzPJoftOO/I8HKX622sT+c0fjnZBLj0=" ];
+  # Use Wasabi cache
+  nix.binaryCaches = ["s3://serokell-private-cache?endpoint=s3.eu-central-1.wasabisys.com&profile=wasabi-cache-read"];
+  nix.binaryCachePublicKeys = ["serokell-1:aIojg2Vxgv7MkzPJoftOO/I8HKX622sT+c0fjnZBLj0="];
 
   # https://github.com/NixOS/nix/issues/1964
   nix.extraOptions = ''
