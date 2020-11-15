@@ -64,7 +64,7 @@
 
   users.mutableUsers = false;
 
-  nix.nixPath = options.nix.nixPath.default ++ [ "nixpkgs=/etc/nix/nixpkgs" "nixpkgs-overlays=/etc/nix/overlays.nix" ];
+  nix.nixPath = [ "nixpkgs=/etc/nix/nixpkgs" "nixpkgs-overlays=/etc/nix/overlays.nix" ];
   environment.etc."nix/nixpkgs".source = pkgs.path;
   environment.etc."nix/overlays.nix".source = ./../overlay/default.nix;
 }
