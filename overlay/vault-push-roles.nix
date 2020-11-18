@@ -30,8 +30,8 @@
       secret_id_num_uses = 0;
     };
 
-    mkApprole = { name, ... }:
-      final.renderJSON "approle-${name}"
+    mkApprole = { approleName, name, ... }:
+      final.renderJSON "approle-${approleName}"
       (final.approleParams // { token_policies = [ name ]; });
 
     approleCapabilities = { };
@@ -39,15 +39,24 @@
     approleCapabilitiesFor = { approleName, ... }:
       final.approleCapabilities.${approleName} or [ "read" ];
 
-    mkPolicy = { name, vaultPathPrefix, namespace, ... }@params:
-      final.renderJSON "policy-${name}" {
+    mkPolicy = { approleName, name, vaultPathPrefix, namespace, ... }@params: let
+      splitPrefix = builtins.filter builtins.isString (builtins.split "/" vaultPathPrefix);
+
+      insertAt = lst: index: value: (lib.lists.take index lst) ++ [value] ++ (lib.lists.drop index lst);
+
+      makePrefix = value: builtins.concatStringsSep "/" (insertAt splitPrefix 1 value);
+
+      metadataPrefix = makePrefix "metadata";
+      dataPrefix = makePrefix "+";
+    in
+      final.renderJSON "policy-${approleName}" {
         path = [
           {
-            "kv/metadata/${vaultPathPrefix}/${namespace}/${name}/*" =
+            "${metadataPrefix}/${namespace}/${name}/*" =
               [{ capabilities = [ "list" ]; }];
           }
           {
-            "kv/+/${vaultPathPrefix}/${namespace}/${name}/*" =
+            "${dataPrefix}/${namespace}/${name}/*" =
               [{ capabilities = final.approleCapabilitiesFor params; }];
           }
         ];
