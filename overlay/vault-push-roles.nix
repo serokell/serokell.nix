@@ -30,26 +30,31 @@
       secret_id_num_uses = 0;
     };
 
-    mkApprole = { approleName, name, ... }:
-      final.renderJSON "approle-${approleName}"
+    mkApprole = { name, ... }:
       (final.approleParams // { token_policies = [ name ]; });
+
+    renderApprole = { approleName, ... }@params:
+      final.renderJSON "approle-${approleName}" (final.mkApprole params);
 
     approleCapabilities = { };
 
     approleCapabilitiesFor = { approleName, ... }:
       final.approleCapabilities.${approleName} or [ "read" ];
 
-    mkPolicy = { approleName, name, vaultPathPrefix, namespace, ... }@params: let
-      splitPrefix = builtins.filter builtins.isString (builtins.split "/" vaultPathPrefix);
+    mkPolicy = { approleName, name, vaultPathPrefix, namespace, ... }@params:
+      let
+        splitPrefix = builtins.filter builtins.isString
+          (builtins.split "/" vaultPathPrefix);
 
-      insertAt = lst: index: value: (lib.lists.take index lst) ++ [value] ++ (lib.lists.drop index lst);
+        insertAt = lst: index: value:
+          (lib.lists.take index lst) ++ [ value ] ++ (lib.lists.drop index lst);
 
-      makePrefix = value: builtins.concatStringsSep "/" (insertAt splitPrefix 1 value);
+        makePrefix = value:
+          builtins.concatStringsSep "/" (insertAt splitPrefix 1 value);
 
-      metadataPrefix = makePrefix "metadata";
-      dataPrefix = makePrefix "+";
-    in
-      final.renderJSON "policy-${approleName}" {
+        metadataPrefix = makePrefix "metadata";
+        dataPrefix = makePrefix "+";
+      in {
         path = [
           {
             "${metadataPrefix}/${namespace}/${name}/*" =
@@ -61,18 +66,21 @@
           }
         ];
       };
+
+    renderPolicy = { approleName, ... }@params:
+      final.renderJSON "policy-${approleName}" (final.mkPolicy params);
   };
 
   __toString = self:
     let
       final = lib.fix self.overrideable;
 
-      inherit (final) mkApprole mkPolicy renderJSON extraApproles;
+      inherit (final) renderApprole renderPolicy renderJSON extraApproles;
 
       writeApprole = { approleName, vaultAddress, ... }@params:
         let
-          approle = mkApprole params;
-          policy = mkPolicy params;
+          approle = renderApprole params;
+          policy = renderPolicy params;
           vaultWrite = ''
             echo vault write "auth/approle/role/${approleName}" "@${approle}"
             echo vault policy write "${approleName}" "${policy}"
