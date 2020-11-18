@@ -7,6 +7,7 @@
 {
   imports = [
     ./services/nginx.nix
+    ./ssh-hostkeys.nix
   ];
 
   networking.firewall = {
