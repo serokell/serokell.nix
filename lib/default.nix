@@ -4,6 +4,11 @@
 
 { lib, gitignore-nix }:
 
-{
+rec {
   src = import ./src.nix { inherit lib gitignore-nix; };
+
+  # Extend nixpkgs with multiple overlays
+  #   pkgs = pkgsWith nixpkgs.legacyPackages.${system} [ inputs.serokell-nix.overlay ];
+	foldExtensions = builtins.foldl' lib.composeExtensions (_: _: {});
+	pkgsWith = p: e: p.extend (foldExtensions e);
 }
