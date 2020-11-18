@@ -5,8 +5,6 @@
 { lib, pkgs, config, options, ... }:
 
 {
-  imports = [ ./nginx-vhosts.nix ];
-
   networking.firewall = {
     allowPing = false;
     logRefusedConnections = false;
