@@ -1,4 +1,3 @@
-let
 {
   programs.ssh.knownHosts = {
     "staging.ment.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMTEXN9yBPSTdFRtOkJGt/CzlemqS/bSzbsOGDRvU/U/"; };
