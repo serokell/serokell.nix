@@ -9,8 +9,6 @@ let
   inherit (final) callPackage lib;
 in
 {
-  mtproxy = callPackage ./mtproxy { };
-
   # Uses sources.mix-to-nix and sources.gitignore
   nixUnstable = inputs.nix-unstable.defaultPackage.${final.system};
 

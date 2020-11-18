@@ -14,10 +14,6 @@
       flake = false;
     };
 
-    scratch.url = "github:serokell/scratch";
-
-    hermetic.url = "github:serokell/hermetic/flake";
-
     flake-utils.url = "github:numtide/flake-utils";
 
     flake-compat = {
@@ -37,22 +33,13 @@
     nixosModules = {
       common = import ./modules/common.nix;
 
-      defaults = { lib, pkgs, ... }: {
-        services.mysql.package = lib.mkOptionDefault pkgs.mariadb;
-        services.youtrack.virtualHost = lib.mkOptionDefault "youtrack";
-      };
-
       acme-sh = import ./modules/acme-sh.nix;
       vault-secrets = import ./modules/vault-secrets.nix;
-
       serokell-users = import ./modules/serokell-users.nix;
       hackage-search = import ./modules/services/hackage-search.nix;
-      hermetic = import ./modules/services/hermetic.nix;
-      mtproxy = import ./modules/services/mtproxy.nix;
       nginx = import ./modules/services/nginx.nix;
       oauth2_proxy = import ./modules/services/oauth2_proxy.nix;
       oauth2_proxy_nginx = import ./modules/services/oauth2_proxy_nginx.nix;
-      podman-autoprune = import ./modules/services/podman-autoprune.nix;
       upload-daemon = import ./modules/services/upload-daemon.nix;
     };
   } // flake-utils.lib.eachDefaultSystem (system:
@@ -69,7 +56,7 @@
         ];
       };
       packages = {
-        inherit (pkgs) mtproxy oauth2_proxy youtrack scratch nixUnstable;
+        inherit (pkgs) oauth2_proxy youtrack nixUnstable;
       };
   }));
 }
