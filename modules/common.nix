@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-{ lib, pkgs, config, options, ... }:
+{ lib, pkgs, config, options, inputs, ... }:
 
 {
   imports = [
@@ -71,6 +71,7 @@
 
   users.mutableUsers = false;
 
+  nixpkgs.overlays = [ (import ./../overlay inputs) ];
   nix.nixPath = [ "nixpkgs=/etc/nix/nixpkgs" ];
   environment.etc."nix/nixpkgs".source = pkgs.path;
 
