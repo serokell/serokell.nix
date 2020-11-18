@@ -5,6 +5,10 @@
 { lib, pkgs, config, options, ... }:
 
 {
+  imports = [
+    ./services/nginx.nix
+  ];
+
   networking.firewall = {
     allowPing = false;
     logRefusedConnections = false;
