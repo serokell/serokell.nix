@@ -15,6 +15,8 @@ in
   oauth2_proxy = callPackage ./oauth2_proxy { };
   youtrack = callPackage ./youtrack.nix { };
 
+  vault-push-roles = callPackage ./vault-push-roles.nix { };
+
   build = {
     /*
     * Run a series of commands only for their exit status.
