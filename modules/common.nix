@@ -48,6 +48,11 @@
     recommendedTlsSettings = lib.mkDefault true;
   };
 
+  security.acme = {
+    email = "operations@serokell.io";
+    acceptTerms = true;
+  };
+
   documentation.nixos.enable = false;
 
   services.openssh = {
