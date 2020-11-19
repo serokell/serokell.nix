@@ -21,6 +21,9 @@
     disabledCollectors = [ "timex" ];
   };
 
+  services.mysql.package = lib.mkOptionDefault pkgs.mariadb;
+  services.postgresql.package = lib.mkOptionDefault pkgs.postgresql_12;
+
   nix.autoOptimiseStore = true;
 
   # Use Wasabi cache
