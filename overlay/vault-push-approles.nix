@@ -3,18 +3,18 @@
 # Inputs: a flake with `nixosConfigurations`
 
 # Usage:
-# apps.x86_64-linux.vault-push-roles = { type = "app"; program = "${pkgs.vault-push-approles self}/bin/vault-push-approles"; }
+# apps.x86_64-linux.vault-push-approles = { type = "app"; program = "${pkgs.vault-push-approles self}/bin/vault-push-approles"; }
 
 { nixosConfigurations ? { }, ... }: rec {
   # Overrideable functions
   # Usage examples:
-  # pkgs.vault-push-roles self { approleCapabilities.aquarius-albali-borgbackup = [ "read" "write" ]; }
-  /* pkgs.vault-push-roles self (final: prev: {
+  # pkgs.vault-push-approles self { approleCapabilities.aquarius-albali-borgbackup = [ "read" "write" ]; }
+  /* pkgs.vault-push-approles self (final: prev: {
        approleCapabilitiesFor = { approleName, namespace, ... }@params:
          if namespace == "albali" then [ "read" "write" ] else prev.approleCapabilitiesFor params;
      })
   */
-  # pkgs.vault-push-roles { } { extraApproles = [ { ... } ] }
+  # pkgs.vault-push-approles { } { extraApproles = [ { ... } ] }
 
   overrideable = final: {
     extraApproles = [ ];
@@ -187,12 +187,12 @@
       writeAllApproles =
         assert allUnique (map (x: x.approleName) allApproleParams);
         lib.concatMapStringsSep "\n" writeApprole allApproleParams;
-    in writeShellScriptBin "vault-push-roles" ''
+    in writeShellScriptBin "vault-push-approles" ''
       set -euo pipefail
       ${writeAllApproles}
     '';
 
-  __functor = self: overrides:
+    __functor = self: overrides:
     self // {
       overrideable = s:
         (self.overrideable s) // (if builtins.isFunction overrides then
