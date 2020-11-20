@@ -30,9 +30,14 @@
   nix.binaryCaches = ["s3://serokell-private-cache?endpoint=s3.eu-central-1.wasabisys.com&profile=wasabi-cache-read"];
   nix.binaryCachePublicKeys = ["serokell-1:aIojg2Vxgv7MkzPJoftOO/I8HKX622sT+c0fjnZBLj0="];
 
-  # https://github.com/NixOS/nix/issues/1964
   nix.extraOptions = ''
+    # https://github.com/NixOS/nix/issues/1964
     tarball-ttl = 0
+
+    # Enable flakes and nix-command by default if available
+    # Note: causes harmless warning on stable nix about
+    #   experimental-features being an unrecognized option
+    experimental-features = nix-command flakes
   '';
 
   nix.gc = {
