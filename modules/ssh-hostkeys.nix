@@ -7,5 +7,7 @@
     "ch-s012.rsync.net" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO5lfML3qjBiDXi4yh3xPoXPHqIOeLNp66P3Unrl+8g3"; };
     "[helvetios.pegasus.serokell.team]:17788" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGMP/QMBHckFeyyexEXkb/7mda52G5wZsdSE78fBMmop"; };
     "[enif.pegasus.serokell.team]:17788" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKBl5xDVPpBwnDjy3/vocWhkxd4gzG2/XhCqu4BKBqSP"; };
+    "agora.tezos.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH/2LMJECtHWdJDvWBcGFtwJmFnGp1nTt3dE+Tibig+g"; };
+    "www.tezosagora.org" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK3YKZ2BSk/Ysb/qfUVQSbHOkkiALiVjv1DAKTKQFhp3"; };
   };
 }
