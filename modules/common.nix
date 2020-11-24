@@ -34,6 +34,9 @@
   nix.binaryCachePublicKeys = ["serokell-1:aIojg2Vxgv7MkzPJoftOO/I8HKX622sT+c0fjnZBLj0="];
 
   nix.extraOptions = ''
+    # Allow CI to work when wasabi dies
+    fallback = true
+
     # https://github.com/NixOS/nix/issues/1964
     tarball-ttl = 0
 
