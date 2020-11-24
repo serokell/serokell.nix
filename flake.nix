@@ -41,6 +41,7 @@
       oauth2_proxy = import ./modules/services/oauth2_proxy.nix;
       oauth2_proxy_nginx = import ./modules/services/oauth2_proxy_nginx.nix;
       upload-daemon = import ./modules/services/upload-daemon.nix;
+      hetzner-cloud = import ./modules/virtualization/hetzner-cloud.nix;
     };
   } // flake-utils.lib.eachDefaultSystem (system:
     let

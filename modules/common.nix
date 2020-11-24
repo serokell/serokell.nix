@@ -15,6 +15,9 @@
     logRefusedConnections = false;
   };
 
+  # Default to /tmp on disk, move it to tmpfs if server big enough
+  boot.cleanTmpDir = true;
+
   services.prometheus.exporters.node = {
     enable = true;
     enabledCollectors = [ "systemd" ];
