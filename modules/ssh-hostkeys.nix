@@ -9,5 +9,6 @@
     "[enif.pegasus.serokell.team]:17788" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKBl5xDVPpBwnDjy3/vocWhkxd4gzG2/XhCqu4BKBqSP"; };
     "agora.tezos.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH/2LMJECtHWdJDvWBcGFtwJmFnGp1nTt3dE+Tibig+g"; };
     "www.tezosagora.org" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK3YKZ2BSk/Ysb/qfUVQSbHOkkiALiVjv1DAKTKQFhp3"; };
+    "df181.macincloud.com" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFiSzgh9QngVqrjuzF4agSimszUSHoMXuj8/wDwfzL/O"; };
   };
 }
