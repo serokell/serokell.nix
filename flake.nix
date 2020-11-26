@@ -8,6 +8,7 @@
   inputs = {
     nixpkgs.url = "github:serokell/nixpkgs";
     nix-unstable.url = "github:nixos/nix";
+    haskell-nix.url = "github:input-output-hk/haskell.nix/bd45da822d2dccdbb3f65d0b52dd2a91fd65ca4e";
 
     gitignore-nix = {
       url = "github:hercules-ci/gitignore.nix";
