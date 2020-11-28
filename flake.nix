@@ -38,6 +38,7 @@
       vault-secrets = import ./modules/vault-secrets.nix;
       serokell-users = import ./modules/serokell-users.nix;
       hackage-search = import ./modules/services/hackage-search.nix;
+      mtg = import ./modules/services/mtg.nix;
       nginx = import ./modules/services/nginx.nix;
       oauth2_proxy = import ./modules/services/oauth2_proxy.nix;
       oauth2_proxy_nginx = import ./modules/services/oauth2_proxy_nginx.nix;
@@ -58,7 +59,7 @@
         ];
       };
       packages = {
-        inherit (pkgs) oauth2_proxy youtrack nixUnstable;
+        inherit (pkgs) oauth2_proxy youtrack mtg nixUnstable;
       };
   }));
 }

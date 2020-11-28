@@ -14,6 +14,7 @@ in
 
   oauth2_proxy = callPackage ./oauth2_proxy { };
   youtrack = callPackage ./youtrack.nix { };
+  mtg = callPackage ./mtg { };
 
   build = {
     /*

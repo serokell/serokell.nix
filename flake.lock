@@ -47,6 +47,22 @@
         "type": "github"
       }
     },
+    "haskell-nix": {
+      "locked": {
+        "lastModified": 1599710583,
+        "narHash": "sha256-KX4laWv4X0Cu3EOsdaeGDickyyNwlJHwktGiJrfDtDE=",
+        "owner": "input-output-hk",
+        "repo": "haskell.nix",
+        "rev": "bd45da822d2dccdbb3f65d0b52dd2a91fd65ca4e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "input-output-hk",
+        "repo": "haskell.nix",
+        "rev": "bd45da822d2dccdbb3f65d0b52dd2a91fd65ca4e",
+        "type": "github"
+      }
+    },
     "lowdown-src": {
       "flake": false,
       "locked": {
@@ -117,6 +133,7 @@
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
         "gitignore-nix": "gitignore-nix",
+        "haskell-nix": "haskell-nix",
         "nix-unstable": "nix-unstable",
         "nixpkgs": "nixpkgs_2"
       }
