@@ -94,7 +94,7 @@ in
 
     package = mkOption {
       type = types.package;
-      default = pkgs.oauth2_proxy;
+      default = pkgs.serokell-oauth2_proxy;
       defaultText = "pkgs.oauth2_proxy";
       description = ''
         The package that provides oauth2_proxy.

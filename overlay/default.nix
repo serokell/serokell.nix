@@ -12,7 +12,7 @@ in
   # Uses sources.mix-to-nix and sources.gitignore
   nixUnstable = inputs.nix-unstable.defaultPackage.${final.system};
 
-  oauth2_proxy = callPackage ./oauth2_proxy { };
+  serokell-oauth2_proxy = callPackage ./oauth2_proxy { };
   youtrack = callPackage ./youtrack.nix { };
 
   build = {
