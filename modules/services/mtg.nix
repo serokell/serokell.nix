@@ -28,8 +28,8 @@ in
 
     httpPort = mkOption {
       type = types.int;
-      default = 9443;
-      example = 8443;
+      default = 3128;
+      example = 3000;
       description = ''
         HTTP port for clients to connect to.
       '';
@@ -61,5 +61,6 @@ in
       };
     };
 
+    networking.firewall.allowedTCPPorts = [ cfg.httpPort ];
   };
 }
