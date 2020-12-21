@@ -108,10 +108,19 @@ let
 
         user = mkOption {
           type = with types; nullOr str;
-          default = null;
+          default = "root";
           example = "gitlab-runner";
           description = ''
-            User that should own the secrets files. Defaults to root.
+            User that should own the secrets files.
+          '';
+        };
+
+        group = mkOption {
+          type = with types; nullOr str;
+          default = "nobody";
+          example = "gitlab-runner";
+          description = ''
+            Group that should own the secrets files.
           '';
         };
 
@@ -231,8 +240,8 @@ in
         '' + ''
           secretsPath="${secretsPath}"
           ${extraScript}
-        '' + optionalString (user != null) ''
-          chown -R "${user}:nobody" "${secretsPath}"
+
+          chown -R "${user}:${group}" "${secretsPath}"
         '';
 
         serviceConfig = {
