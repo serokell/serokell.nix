@@ -44,7 +44,7 @@ in
     # FIXME remote modules don't work since they aren't supported by nixpkgs
     # directly and terraform can't fetch them inside the sandbox
     validateTerraform = { src, terraform ? final.terraform }: final.runCommand "terraform-check"
-    { buildInputs = [ terraform ]; } ''
+    { inherit src; buildInputs = [ terraform ]; } ''
       cp -r $src ./terraform
       terraform init -backend=false terraform
       terraform validate terraform
