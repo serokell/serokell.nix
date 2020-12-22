@@ -39,6 +39,14 @@ in
       fi
     '';
 
+    validateTerraform = { src, terraform ? final.terraform }: final.runCommand "terraform-check"
+    { buildInputs = [ terraform ]; } ''
+      cp -r $src ./terraform
+      terraform init -backend=false terraform
+      terraform validate terraform
+      touch $out
+    '';
+
     haskell = {
       hlint = src: final.runCommand "hlint.html" {} ''
         ${final.hlint}/bin/hlint "${src}" --no-exit-code --report=$out -j
