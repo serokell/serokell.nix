@@ -110,7 +110,7 @@ in
         chmod 755 ${cfg.stateDir}
         mkdir -p "${statePath}"
         chown -R '${user}:${group}' "${statePath}"
-        chmod 700 "${statePath}"
+        chmod 750 "${statePath}"
         rm -f "${statePath}/renewed"
       '';
       environment.LE_WORKING_DIR = statePath;
