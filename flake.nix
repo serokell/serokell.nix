@@ -38,8 +38,6 @@
       serokell-users = import ./modules/serokell-users.nix;
       hackage-search = import ./modules/services/hackage-search.nix;
       nginx = import ./modules/services/nginx.nix;
-      oauth2_proxy = import ./modules/services/oauth2_proxy.nix;
-      oauth2_proxy_nginx = import ./modules/services/oauth2_proxy_nginx.nix;
       upload-daemon = import ./modules/services/upload-daemon.nix;
       hetzner-cloud = import ./modules/virtualization/hetzner-cloud.nix;
     };
@@ -57,7 +55,7 @@
         ];
       };
       packages = {
-        inherit (pkgs) oauth2_proxy youtrack nixUnstable;
+        inherit (pkgs) youtrack nixUnstable;
       };
   }));
 }
