@@ -13,6 +13,7 @@ NOTES_LINK=$(echo "$REL" | jq -r '.notesLink')
 HASH=$(curl "$HASH_URL" | cut -d' ' -f1)
 
 CUR_URL=$(jq -r .url $ROOT/overlay/youtrack_rev.json)
+CUR_VERSION=$(jq -r .version $ROOT/overlay/youtrack_rev.json)
 
 if [[ "$URL" == "$CUR_URL" ]]; then
     echo "no update needed"
@@ -20,12 +21,12 @@ if [[ "$URL" == "$CUR_URL" ]]; then
 fi
 
 git fetch origin
-git checkout -B "upd-youtrack-$URL" origin/master
+git checkout -B "upd-youtrack-$VERSION" origin/master
 echo "updating from $CUR_URL to $URL"
 echo "RELEASE NOTES: $NOTES_LINK"
 echo "$(jq ".version = \"$VERSION\" | .url = \"$URL\" | .sha256 = \"$HASH\"" < $ROOT/overlay/youtrack_rev.json)" > $ROOT/overlay/youtrack_rev.json
 git add ./overlay/youtrack_rev.json
-git commit -m "youtrack: $CUR -> $URL
+git commit -m "youtrack: $CUR_VERSION -> $VERSION
 
 automatically generated :)
 [release notes]($NOTES_LINK)"
