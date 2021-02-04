@@ -10,6 +10,6 @@
     "agora.tezos.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH/2LMJECtHWdJDvWBcGFtwJmFnGp1nTt3dE+Tibig+g"; };
     "www.tezosagora.org" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK3YKZ2BSk/Ysb/qfUVQSbHOkkiALiVjv1DAKTKQFhp3"; };
     "df181.macincloud.com" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFiSzgh9QngVqrjuzF4agSimszUSHoMXuj8/wDwfzL/O"; };
-    "sadalbari.pegasus.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPLVD9BFu7FBIQC3VHTCchMefGcLnFO6Dt+j1yjfUSfp"; };
+    "sadalbari.pegasus.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILlXjtyvFlJIH8d4KEf/YG0c2fwYBjIoig5ZvQjw5qkl"; };
   };
 }
