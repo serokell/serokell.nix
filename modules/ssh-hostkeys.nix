@@ -11,5 +11,6 @@
     "www.tezosagora.org" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK3YKZ2BSk/Ysb/qfUVQSbHOkkiALiVjv1DAKTKQFhp3"; };
     "df181.macincloud.com" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFiSzgh9QngVqrjuzF4agSimszUSHoMXuj8/wDwfzL/O"; };
     "sadalbari.pegasus.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILlXjtyvFlJIH8d4KEf/YG0c2fwYBjIoig5ZvQjw5qkl"; };
+    "[tt.serokell.io]:17788" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN/DPi5VvEabvJIYCIeydk6JlIdrbBw5Y4OYC3Z1WFc9"; };
   };
 }
