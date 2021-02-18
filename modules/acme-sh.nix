@@ -103,7 +103,7 @@ in
         EnvironmentFile = keyFile;
         SuccessExitStatus = "0 2";
       };
-      path = with pkgs; [ acme-sh systemd utillinuxMinimal procps ];
+      path = with pkgs; [ acme-sh systemd util-linuxMinimal procps ];
       preStart = ''
         mkdir -p ${cfg.stateDir}
         chown 'root:root' ${cfg.stateDir}
