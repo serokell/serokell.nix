@@ -18,7 +18,7 @@ in
     };
   };
 
-  config = mkIf cfg.openFirewall {
+  config = mkIf (cfg.enable && cfg.openFirewall) {
     # TODO: this obviously doesn't work if custom ports are used, but that
     # can be added later to the module, API won't have to be changed.
     networking.firewall.allowedTCPPorts = [ 80 443 ];
