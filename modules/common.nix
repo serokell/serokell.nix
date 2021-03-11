@@ -8,6 +8,7 @@
   imports = [
     ./services/nginx.nix
     ./ssh-hostkeys.nix
+    ./nix-gc.nix
   ];
 
   networking.firewall = {
@@ -45,14 +46,6 @@
     #   experimental-features being an unrecognized option
     experimental-features = nix-command flakes
   '';
-
-  nix.gc = {
-    automatic = true;
-    # delete so there is 15GB free, and delete very old generations
-    # delete-older-than by itself will still delete all non-referenced packages (ie build dependencies)
-    options = lib.mkForce ''
-      --max-freed "$((15 * 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))" --delete-older-than 14d'';
-  };
 
   programs.mosh.enable = true;
 
