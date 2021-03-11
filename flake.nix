@@ -40,6 +40,7 @@
       nginx = import ./modules/services/nginx.nix;
       upload-daemon = import ./modules/services/upload-daemon.nix;
       hetzner-cloud = import ./modules/virtualization/hetzner-cloud.nix;
+      ec2 = import ./modules/virtualization/ec2.nix;
     };
   } // flake-utils.lib.eachDefaultSystem (system:
     let
