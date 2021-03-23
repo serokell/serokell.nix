@@ -1,6 +1,6 @@
 rec {
   # Exposure 0.0, but can't really do anything
-  hardeningProfiles.isolate = {
+  isolate = {
     PrivateNetwork = "yes";
     # CapabilityBoundingSet = [
     #   "~CAP_(CHOWN|FSETID|SETFCAP)"
@@ -74,11 +74,11 @@ rec {
       "~@cpu-emulation"
       "~@obsolete"
     ];
-    AmbientCapabilities = "";
+    AmbientCapabilities = [ "" ];
     RestrictRealtime = "yes";
     # Not sure when to really use this
     # RootDirectory = "";
-    SupplementaryGroups = "";
+    SupplementaryGroups = [ "" ];
     Delegate = "no";
     LockPersonality = "yes";
     MemoryDenyWriteExecute = "yes";
@@ -88,7 +88,7 @@ rec {
     ProcSubset = "pid";
   };
   # Exposure 1.1 OK, suitable for most of our backends
-  hardeningProfiles.backend = hardeningProfiles.isolate // {
+  backend = isolate // {
     RestrictAddressFamilies = [
       "AF_INET"
       "AF_UNIX" # For postgresql etc
@@ -98,7 +98,7 @@ rec {
     PrivateNetwork = "no";
   };
   # Exposure 0.8 OK, suitable for backends that listen on UNIX sockets only
-  hardeningProfiles.backend_unix_socket = hardeningProfiles.backend // {
+  backend_unix_socket = backend // {
     RestrictAddressFamilies = [ "AF_UNIX" ];
   };
 }

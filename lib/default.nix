@@ -12,7 +12,7 @@ rec {
   foldExtensions = builtins.foldl' lib.composeExtensions (_: _: { });
   pkgsWith = p: e: p.extend (foldExtensions e);
 
-  systemd = import ./systemd.nix;
+  systemd = import ./systemd;
 
   types = import ./types.nix { inherit lib; };
 }
