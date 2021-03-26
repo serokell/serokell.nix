@@ -19,11 +19,25 @@ in
       example = [ "gosha" "masha" ];
     };
 
+    wheelUsersExtraGroups = mkOption {
+      default = [ ];
+      type = types.listOf types.str;
+      description = "Extra groups added to users in wheelUsers";
+      example = [ "docker" ];
+    };
+
     regularUsers = mkOption {
       default = [ ];
       type = types.listOf types.str;
       description = "Regular users";
       example = [ "misha" "vasya" "petya" ];
+    };
+
+    regularUsersExtraGroups = mkOption {
+      default = [ ];
+      type = types.listOf types.str;
+      description = "Extra groups added to all users";
+      example = [ "systemd-journal" ];
     };
   };
 
@@ -44,7 +58,8 @@ in
     users.users = lib.genAttrs allUsers (name: {
       isNormalUser = true;
       openssh.authorizedKeys.keys = ssh-keys.${name};
-      extraGroups = lib.optionals (elem name cfg.wheelUsers) [ "wheel" ];
+      extraGroups = cfg.regularUsersExtraGroups ++
+        (lib.optionals (elem name cfg.wheelUsers) ([ "wheel" ] ++ cfg.wheelUsersExtraGroups));
     });
 
     # give all users access to systemd logs
