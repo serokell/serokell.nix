@@ -82,9 +82,6 @@
       # Enable XSS protection of the browser.
       # May be unnecessary when CSP is configured properly (see above)
       add_header X-XSS-Protection "1; mode=block";
-
-      # This might create errors
-      proxy_cookie_path / "/; secure; HttpOnly; SameSite=strict";
     '';
   };
 
