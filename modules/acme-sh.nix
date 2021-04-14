@@ -92,7 +92,10 @@ in
   config = {
     systemd.services = lib.mapAttrs' (name: value: lib.nameValuePair "acme-sh-${name}" (with value; {
       description = "Renew ACME Certificate for ${name}";
-      after = [ "network.target" "network-online.target" ];
+      after =
+        [ "network.target" "network-online.target" ]
+        # wait for consul if we use it for locking
+        ++ optional (consulLock != null) [ "consul.service" ];
       wants = [ "network-online.target" ];
       serviceConfig = {
         Type = "oneshot";
