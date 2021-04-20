@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-{ stdenv, makeWrapper, jre, gawk }:
+{ lib, stdenv, makeWrapper, jre, gawk }:
 
 let
   rev = builtins.fromJSON (builtins.readFile ./youtrack_rev.json);
@@ -24,12 +24,12 @@ stdenv.mkDerivation rec {
     runHook preInstall
     makeWrapper ${jre}/bin/java $out/bin/youtrack \
       --add-flags "\$YOUTRACK_JVM_OPTS -jar $jar" \
-      --prefix PATH : "${stdenv.lib.makeBinPath [ gawk ]}" \
+      --prefix PATH : "${lib.makeBinPath [ gawk ]}" \
       --set JRE_HOME ${jre}
     runHook postInstall
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Issue tracking and project management tool for developers";
     maintainers = with maintainers; [ yorickvp ];
     # https://www.jetbrains.com/youtrack/buy/license.html
