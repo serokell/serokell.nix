@@ -15,8 +15,8 @@ rec {
     "gitlab.com" = { publicKey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9"; };
     "governance.stakerdao.com" = programs.ssh.knownHosts."agora.stakerdao.serokell.team";
     "ment.hr" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIELrARU5i3TM7PR1fcCmtRsnW0vFFTib0hNCBw561WtQ"; };
-    "[pont.ee]:17788" = programs.ssh.knownHosts."ment.hr";
-    "[pont.serokell.team]:17788" = programs.ssh.knownHosts."staging.ment.serokell.team";
+    "pont.ee" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEIWQaHzlzVhBo8Yld/5bUp5fvOQiPJOMHFJyu7iMPHs"; };
+    "pont.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMTEXN9yBPSTdFRtOkJGt/CzlemqS/bSzbsOGDRvU/U/"; };
     "sadalbari.pegasus.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILlXjtyvFlJIH8d4KEf/YG0c2fwYBjIoig5ZvQjw5qkl"; };
     "social-network.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM0fI99uE0u0iExolwIFDMEw9ITX3jNlvSMa+YmzN+ar"; };
     "staging.edna.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAdeUbotl2b/CbCmXWZ0UBkp0kbritHc9Sw//UnFIJi1" ; };
