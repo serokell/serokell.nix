@@ -25,6 +25,12 @@
     disabledCollectors = [ "timex" ];
   };
 
+  # veth* are created by docker and don't require DHCP. Disabling it also
+  # avoids issues with EC2 instances, because otherwise dhcpcd creates 169.254.0.0/16
+  # route, which breaks access to AWS metadata and AWS NTP server.
+  # nixpkgs issue: https://github.com/NixOS/nixpkgs/issues/109387
+  networking.dhcpcd.denyInterfaces = [ "veth*" ];
+
   services.mysql.package = lib.mkOptionDefault pkgs.mariadb;
   services.postgresql.package = lib.mkOptionDefault pkgs.postgresql_12;
 
