@@ -9,8 +9,7 @@ rec {
 
   # Extend nixpkgs with multiple overlays
   #   pkgs = pkgsWith nixpkgs.legacyPackages.${system} [ inputs.serokell-nix.overlay ];
-  foldExtensions = builtins.foldl' lib.composeExtensions (_: _: { });
-  pkgsWith = p: e: p.extend (foldExtensions e);
+  pkgsWith = p: e: p.extend (lib.composeManyExtensions e);
 
   systemd = import ./systemd;
 
