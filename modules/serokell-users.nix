@@ -44,7 +44,6 @@ in
   config = {
     # default wheel users
     serokell-users.wheelUsers = [
-      "chris"
       "kirelagin"
       "jaga"
       "sweater"
