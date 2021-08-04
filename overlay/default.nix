@@ -38,6 +38,10 @@ in
       fi
     '';
 
+    reuseLint = src: final.build.runCheck ''
+      ${final.reuse}/bin/reuse --root "${src}" lint
+    '';
+
     # Validate a terraform directory.
 
     # FIXME remote modules don't work since they aren't supported by nixpkgs
