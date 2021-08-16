@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: MPL-2.0
 
 { lib, pkgs, config, options, inputs, ... }:
-
 {
   imports = [
     ./services/nginx.nix
@@ -11,111 +10,120 @@
     ./nix-gc.nix
   ];
 
-  networking.firewall = {
-    allowPing = false;
-    logRefusedConnections = false;
+  options.services.nginx.addHSTSHeaders = lib.mkOption {
+    description = "whether to add HSTS headers to all nginx virtualHosts";
+    type = lib.types.bool;
+    default = true;
   };
 
-  # Default to /tmp on disk, move it to tmpfs if server big enough
-  boot.cleanTmpDir = true;
+  config = {
 
-  services.prometheus.exporters.node = {
-    enable = true;
-    enabledCollectors = [ "systemd" ];
-    disabledCollectors = [ "timex" ];
-  };
+    networking.firewall = {
+      allowPing = false;
+      logRefusedConnections = false;
+    };
 
-  # veth* are created by docker and don't require DHCP. Disabling it also
-  # avoids issues with EC2 instances, because otherwise dhcpcd creates 169.254.0.0/16
-  # route, which breaks access to AWS metadata and AWS NTP server.
-  # nixpkgs issue: https://github.com/NixOS/nixpkgs/issues/109387
-  networking.dhcpcd.denyInterfaces = [ "veth*" ];
+    # Default to /tmp on disk, move it to tmpfs if server big enough
+    boot.cleanTmpDir = true;
 
-  services.mysql.package = lib.mkOptionDefault pkgs.mariadb;
-  services.postgresql.package = lib.mkOptionDefault pkgs.postgresql_12;
+    services.prometheus.exporters.node = {
+      enable = true;
+      enabledCollectors = [ "systemd" ];
+      disabledCollectors = [ "timex" ];
+    };
 
-  nix.autoOptimiseStore = true;
+    # veth* are created by docker and don't require DHCP. Disabling it also
+    # avoids issues with EC2 instances, because otherwise dhcpcd creates 169.254.0.0/16
+    # route, which breaks access to AWS metadata and AWS NTP server.
+    # nixpkgs issue: https://github.com/NixOS/nixpkgs/issues/109387
+    networking.dhcpcd.denyInterfaces = [ "veth*" ];
 
-  # Use Wasabi cache
-  nix.binaryCaches = ["s3://serokell-private-cache?endpoint=s3.eu-central-1.wasabisys.com&profile=wasabi-cache-read"];
-  nix.binaryCachePublicKeys = ["serokell-1:aIojg2Vxgv7MkzPJoftOO/I8HKX622sT+c0fjnZBLj0="];
+    services.mysql.package = lib.mkOptionDefault pkgs.mariadb;
+    services.postgresql.package = lib.mkOptionDefault pkgs.postgresql_12;
 
-  nix.extraOptions = ''
-    # Allow CI to work when wasabi dies
-    fallback = true
+    nix.autoOptimiseStore = true;
 
-    # https://github.com/NixOS/nix/issues/1964
-    tarball-ttl = 0
+    # Use Wasabi cache
+    nix.binaryCaches = ["s3://serokell-private-cache?endpoint=s3.eu-central-1.wasabisys.com&profile=wasabi-cache-read"];
+    nix.binaryCachePublicKeys = ["serokell-1:aIojg2Vxgv7MkzPJoftOO/I8HKX622sT+c0fjnZBLj0="];
 
-    # Enable flakes and nix-command by default if available
-    # Note: causes harmless warning on stable nix about
-    #   experimental-features being an unrecognized option
-    experimental-features = nix-command flakes
-  '';
+    nix.extraOptions = ''
+      # Allow CI to work when wasabi dies
+      fallback = true
 
-  programs.mosh.enable = true;
+      # https://github.com/NixOS/nix/issues/1964
+      tarball-ttl = 0
 
-  security.sudo.wheelNeedsPassword = false;
-
-  services.nginx = {
-    appendHttpConfig = ''
-      if_modified_since off;
+      # Enable flakes and nix-command by default if available
+      # Note: causes harmless warning on stable nix about
+      #   experimental-features being an unrecognized option
+      experimental-features = nix-command flakes
     '';
-    recommendedGzipSettings = lib.mkDefault true;
-    recommendedOptimisation = lib.mkDefault true;
-    recommendedProxySettings = lib.mkDefault true;
-    recommendedTlsSettings = lib.mkDefault true;
-    commonHttpConfig = ''
-      # Add HSTS header with preloading to HTTPS requests.
-      # Adding this header to HTTP requests is discouraged
-      map $scheme $hsts_header {
-          https   "max-age=31536000; includeSubdomains; preload";
-      }
-      add_header Strict-Transport-Security $hsts_header;
 
-      # Minimize information leaked to other domains
-      add_header 'Referrer-Policy' 'strict-origin-when-cross-origin';
+    programs.mosh.enable = true;
 
-      # Disable embedding as a frame
-      add_header X-Frame-Options DENY;
+    security.sudo.wheelNeedsPassword = false;
 
-      # Prevent injection of code in other mime types (XSS Attacks)
-      add_header X-Content-Type-Options nosniff;
-    '';
+    services.nginx = {
+      appendHttpConfig = ''
+        if_modified_since off;
+      '';
+      recommendedGzipSettings = lib.mkDefault true;
+      recommendedOptimisation = lib.mkDefault true;
+      recommendedProxySettings = lib.mkDefault true;
+      recommendedTlsSettings = lib.mkDefault true;
+      commonHttpConfig = lib.mkIf config.services.nginx.addHSTSHeaders ''
+        # Add HSTS header with preloading to HTTPS requests.
+        # Adding this header to HTTP requests is discouraged
+        map $scheme $hsts_header {
+        https   "max-age=31536000; includeSubdomains; preload";
+        }
+        add_header Strict-Transport-Security $hsts_header;
+
+        # Minimize information leaked to other domains
+        add_header 'Referrer-Policy' 'strict-origin-when-cross-origin';
+
+        # Disable embedding as a frame
+        add_header X-Frame-Options DENY;
+
+        # Prevent injection of code in other mime types (XSS Attacks)
+        add_header X-Content-Type-Options nosniff;
+      '';
+    };
+
+    security.acme = {
+      email = "operations@serokell.io";
+      acceptTerms = true;
+    };
+
+    documentation.nixos.enable = false;
+
+    services.openssh = {
+      enable = true;
+      passwordAuthentication = false;
+      ports = [ 17788 ];
+    };
+
+    services.nginx.package = pkgs.nginxStable.override {
+      modules = with pkgs.nginxModules; [ brotli ];
+    };
+
+    users.mutableUsers = false;
+
+    nixpkgs.overlays = [ (import ./../overlay inputs) ];
+    nix.nixPath = [ "nixpkgs=/etc/nix/nixpkgs" ];
+    environment.etc."nix/nixpkgs".source = pkgs.path;
+
+    environment.systemPackages = with pkgs; [
+      htop
+      vim
+      rsync
+    ];
+
+    # This value determines the NixOS release with which your system is to be
+    # compatible, in order to avoid breaking some software such as database
+    # servers. You should change this only after NixOS release notes say you
+    # should.
+    system.stateVersion = "20.03"; # Did you read the comment?
   };
-
-  security.acme = {
-    email = "operations@serokell.io";
-    acceptTerms = true;
-  };
-
-  documentation.nixos.enable = false;
-
-  services.openssh = {
-    enable = true;
-    passwordAuthentication = false;
-    ports = [ 17788 ];
-  };
-
-  services.nginx.package = pkgs.nginxStable.override {
-    modules = with pkgs.nginxModules; [ brotli ];
-  };
-
-  users.mutableUsers = false;
-
-  nixpkgs.overlays = [ (import ./../overlay inputs) ];
-  nix.nixPath = [ "nixpkgs=/etc/nix/nixpkgs" ];
-  environment.etc."nix/nixpkgs".source = pkgs.path;
-
-  environment.systemPackages = with pkgs; [
-    htop
-    vim
-    rsync
-  ];
-
-  # This value determines the NixOS release with which your system is to be
-  # compatible, in order to avoid breaking some software such as database
-  # servers. You should change this only after NixOS release notes say you
-  # should.
-  system.stateVersion = "20.03"; # Did you read the comment?
 }
