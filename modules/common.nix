@@ -10,8 +10,8 @@
     ./nix-gc.nix
   ];
 
-  options.services.nginx.addHSTSHeaders = lib.mkOption {
-    description = "whether to add HSTS headers to all nginx virtualHosts";
+  options.services.nginx.addSecurityHeaders = lib.mkOption {
+    description = "whether to add security headers to all nginx virtualHosts";
     type = lib.types.bool;
     default = true;
   };
@@ -72,7 +72,7 @@
       recommendedOptimisation = lib.mkDefault true;
       recommendedProxySettings = lib.mkDefault true;
       recommendedTlsSettings = lib.mkDefault true;
-      commonHttpConfig = lib.mkIf config.services.nginx.addHSTSHeaders ''
+      commonHttpConfig = lib.mkIf config.services.nginx.addSecurityHeaders ''
         # Add HSTS header with preloading to HTTPS requests.
         # Adding this header to HTTP requests is discouraged
         map $scheme $hsts_header {
