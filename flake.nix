@@ -7,7 +7,10 @@
 
   inputs = {
     nixpkgs.url = "github:serokell/nixpkgs";
-    nix-unstable.url = "github:nixos/nix";
+
+    # FIXME: new nix has some issues when running in a git repo in detached state
+    # for example: https://buildkite.com/serokell/serokell-dot-nix/builds/190#aa2b2fed-4163-442a-a726-9ee1ff3dad9e/78-95
+    nix-unstable.url = "github:nixos/nix/79aa7d95183cbe6c0d786965f0dbff414fd1aa67";
 
     gitignore-nix = {
       url = "github:hercules-ci/gitignore.nix";
@@ -43,7 +46,8 @@
       ec2 = import ./modules/virtualization/ec2.nix;
       wireguard-monitoring = import ./modules/wireguard-monitoring.nix;
     };
-  } // flake-utils.lib.eachDefaultSystem (system:
+  } // flake-utils.lib.eachSystem (nixpkgs.lib.remove "aarch64-darwin" flake-utils.lib.defaultSystems) (system:
+    # (pinned nix-unstable version does not support aarch64-darwin)
     let
       pkgs = import nixpkgs {
         inherit system;
