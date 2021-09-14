@@ -57,7 +57,7 @@
         ];
       };
       packages = {
-        inherit (pkgs) youtrack nixUnstable;
+        inherit (pkgs) nixUnstable;
       };
   }));
 }

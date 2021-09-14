@@ -6,13 +6,11 @@ inputs:
 
 final: prev:
 let
-  inherit (final) callPackage lib;
+  inherit (final) lib;
 in
 {
   # Uses sources.mix-to-nix and sources.gitignore
   nixUnstable = inputs.nix-unstable.defaultPackage.${final.system};
-
-  youtrack = callPackage ./youtrack.nix { };
 
   build = {
     /*
