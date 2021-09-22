@@ -38,6 +38,11 @@ submod = with lib;{
     description = "Group running the ACME client.";
   };
 
+  server = mkOption {
+    type = types.str;
+    default = "letsencrypt";
+    description = "Certificate Authority to use";
+  };
   dns = mkOption {
     type = dnstype;
   };
@@ -122,7 +127,7 @@ in
         mapDomain = name: dns: ''-d "${name}" --dns ${dns}'';
         primary = mapDomain mainDomain domains."${mainDomain}";
         domainsStr = lib.concatStringsSep " " ([primary] ++ (lib.remove primary (lib.mapAttrsToList mapDomain domains)));
-        cmd = ''acme.sh --issue ${lib.optionalString (!production) "--test"} ${domainsStr} --reloadcmd "touch ${statePath}/renewed" --syslog 6 > /dev/null'';
+        cmd = ''acme.sh --server ${server} --issue ${lib.optionalString (!production) "--test"} ${domainsStr} --reloadcmd "touch ${statePath}/renewed" --syslog 6 > /dev/null'';
       in
         if consulLock == null then ''
         ${cmd}
