@@ -113,7 +113,7 @@
     nixpkgs.overlays = [ (import ./../overlay inputs) ];
     nix.nixPath = [ "nixpkgs=/etc/nix/nixpkgs" ];
     # A hack to get around Nix not recognizing a runtime dependency on nixpkgs
-    environment.etc."nix/nixpkgs".source = pkgs.copyPathToStore pkgs.path;
+    environment.etc."nix/nixpkgs".source = "${pkgs.path}";
 
     environment.systemPackages = with pkgs; [
       htop
