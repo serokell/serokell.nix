@@ -10,7 +10,7 @@ let
 in
 {
   # Uses sources.mix-to-nix and sources.gitignore
-  nixUnstable = inputs.nix-unstable.defaultPackage.${final.system};
+  nixUnstable = inputs.nix.defaultPackage.${final.system};
 
   build = {
     /*
