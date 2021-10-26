@@ -51,6 +51,7 @@ in
       "zhenya"
       "rvem"
       "notgne2"
+      "cab404"
     ];
 
     # provision users and ssh keys
