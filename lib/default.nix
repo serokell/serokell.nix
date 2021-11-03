@@ -11,6 +11,8 @@ rec {
   #   pkgs = pkgsWith nixpkgs.legacyPackages.${system} [ inputs.serokell-nix.overlay ];
   pkgsWith = p: e: p.extend (lib.composeManyExtensions e);
 
+  haskell = import ./haskell.nix { inherit lib; };
+
   systemd = import ./systemd;
 
   types = import ./types.nix { inherit lib; };
