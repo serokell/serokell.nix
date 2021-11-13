@@ -69,15 +69,15 @@ let
 
       flakeForGhc = ghcVersion:
         let
-          ghc =
+          compiler-nix-name =
             if ghcVersion == null
-            then null  # use default (e.g. from stack.yaml)
-            else haskellNix.compiler."ghc${ghcVersion}";
-          project = projectF (args' // { inherit ghc; });
+            then null
+            else "ghc${ghcVersion}";
+          project = projectF (args' // { inherit compiler-nix-name; });
           prefix =
-              if ghcVersion == null
+              if compiler-nix-name == null
               then ""
-              else "ghc${ghcVersion}:";
+              else "${compiler-nix-name}:";
           fixFlakeOutput = name: output:
             if name == "devShell"
             then output
