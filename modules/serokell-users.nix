@@ -52,6 +52,7 @@ in
       "rvem"
       "notgne2"
       "cab404"
+      "magicrb"
     ];
 
     # provision users and ssh keys
