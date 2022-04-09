@@ -41,6 +41,35 @@ in {
     # run node-exporter on the wireguard interface
     services.prometheus.exporters.node.listenAddress = wireguard-ip;
 
+    # Run promtail and connect to our Loki instance
+    services.promtail = {
+      enable = true;
+      configuration = {
+        server = {
+          http_listen_port = 0;
+          grpc_listen_port = 0;
+        };
+        positions.filename = "/tmp/positions.yaml";
+        clients = [{
+          url = "http://172.21.0.1:3100/loki/api/v1/push";
+        }];
+        scrape_configs = [{
+          job_name = "journal";
+          journal = {
+            max_age = "12h";
+            labels = {
+              job = "systemd-journal";
+              host = config.networking.hostName;
+            };
+          };
+          relabel_configs = [{
+            source_labels = [ "__journal__systemd_unit" ];
+            target_label = "unit";
+          }];
+        }];
+      };
+    };
+
     # wait for wireguard before starting node-exporter
     systemd.services.prometheus-node-exporter.after = [ "wireguard-wg0.service" ];
   };
