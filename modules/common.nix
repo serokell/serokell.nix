@@ -18,6 +18,14 @@
 
   config = {
 
+    programs.atop.enable = true;
+
+    environment.etc."default/atop".text = ''
+      LOGOPTS=""
+      LOGINTERVAL=600
+      LOGGENERATIONS=7
+    '';
+
     networking.firewall = {
       allowPing = false;
       logRefusedConnections = false;
