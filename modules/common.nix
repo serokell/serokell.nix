@@ -34,6 +34,20 @@
     # Default to /tmp on disk, move it to tmpfs if server big enough
     boot.cleanTmpDir = true;
 
+    services.prometheus.exporters.process = {
+      enable = true;
+      settings.process_names = [
+        {
+          name = "{{.Matches.Wrapped}} {{ .Matches.Args }}";
+          cmdline = [ "^/nix/store[^ ]*/(?P<Wrapped>[^ /]*) (?P<Args>.*)" ];
+        }
+        {
+          name = "{{.Comm}}";
+          cmdline = [ ".+" ];
+        }
+      ];
+    };
+
     services.prometheus.exporters.node = {
       enable = true;
       enabledCollectors = [ "systemd" ];

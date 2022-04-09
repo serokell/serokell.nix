@@ -18,6 +18,7 @@ in {
     # firewall rules for the wireguard interface
     networking.firewall.interfaces.wg0.allowedTCPPorts = [
       9100 # prometheus node exporter
+      9256 # prometheus process exporter
     ];
 
     # enable wireguard
@@ -37,6 +38,9 @@ in {
         publicKey = "gOS8bfFuFJmEpaZa19i2Q62gKAaTyL+XWCJvmxekqy8=";
       }];
     };
+
+    # run process-exporter on the wireguard interface
+    services.prometheus.exporters.process.listenAddress = wireguard-ip;
 
     # run node-exporter on the wireguard interface
     services.prometheus.exporters.node.listenAddress = wireguard-ip;
