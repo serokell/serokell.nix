@@ -38,12 +38,12 @@
       enable = true;
       settings.process_names = [
         {
-          name = "{{.Matches.Wrapped}} {{ .Matches.Args }}";
+          name = "{{ .Matches.Wrapped }} {{ .Matches.Args }}";
           cmdline = [ "^/nix/store[^ ]*/(?P<Wrapped>[^ /]*) (?P<Args>.*)" ];
         }
         {
-          name = "{{.Comm}}";
-          cmdline = [ ".+" ];
+          name = "{{ .Matches.All }}";
+          cmdline = [ "(?P<All>.+)" ];
         }
       ];
     };
