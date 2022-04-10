@@ -18,6 +18,8 @@
 
   config = {
 
+    services.earlyoom.enable = lib.mkDefault true;
+
     programs.atop.enable = true;
 
     environment.etc."default/atop".text = ''
