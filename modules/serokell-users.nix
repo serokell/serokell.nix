@@ -48,7 +48,6 @@ in
       "jaga"
       "sweater"
       "balsoft"
-      "zhenya"
       "rvem"
       "notgne2"
       "cab404"
