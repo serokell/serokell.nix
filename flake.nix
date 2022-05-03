@@ -18,10 +18,11 @@
     };
   };
 
-  outputs = { self, nixpkgs, gitignore-nix, flake-utils, nix, ... }@inputs: ({
+  outputs = { self, nixpkgs, gitignore-nix, flake-utils, nix, deploy-rs, ... }@inputs: ({
     overlay = import ./overlay inputs;
 
     lib = import ./lib {
+      inherit nixpkgs deploy-rs;
       inherit (nixpkgs) lib;
       gitignore-nix = import gitignore-nix { inherit (nixpkgs) lib; };
     };

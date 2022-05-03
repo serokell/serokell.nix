@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-{ lib, gitignore-nix }:
+{ lib, gitignore-nix, nixpkgs, deploy-rs }:
 
 rec {
   src = import ./src.nix { inherit lib gitignore-nix; };
@@ -16,4 +16,6 @@ rec {
   systemd = import ./systemd;
 
   types = import ./types.nix { inherit lib; };
+
+  pipeline = import ./pipeline.nix { inherit lib nixpkgs deploy-rs; };
 }
