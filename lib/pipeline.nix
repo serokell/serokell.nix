@@ -5,8 +5,10 @@
 { lib, nixpkgs, deploy-rs }:
 rec {
   mkPipeline = { deploy ? { nodes = { }; }, packages ? { }, checks ? { }, deployFromPipeline ? [ ], agents ? [ ]
-    , systems ? [ "x86_64-linux" ], ciSystem ? null, ... }@args:
+    , systems ? [ "x86_64-linux" ], ciSystem ? null, nixArgs ? [ ], ... }@args:
     let
+      nixArgs' = (if length nixArgs == 0 then "" else " ") + (concatStringsSep " " nixArgs);
+
       ciSystem' = if ciSystem == null then builtins.head systems else ciSystem;
 
       pkgs = nixpkgs.legacyPackages.${ciSystem'};
@@ -27,7 +29,7 @@ rec {
 
       filterNative = what:
         listToAttrs (concatMap (system:
-          optional (args.${what} ? ${system}) {
+          optional (args ? ${what} && args.${what} ? ${system}) {
             name = system;
             value = args.${what}.${system};
           }) systems);
@@ -58,7 +60,7 @@ rec {
             "${elemAt comp 2}.${elemAt comp 4}";
         in {
           label = "Build ${displayName}";
-          command = "${nixBinPath}nix build .#${escapeAttrPath comp}";
+          command = "${nixBinPath}nix build .#${escapeAttrPath comp}${nixArgs'}";
           inherit agents;
         } // optionalAttrs hasArtifacts {
           artifact_paths = map (art: "result${art}") drv.meta.artifacts;
@@ -70,7 +72,7 @@ rec {
 
       check = name: {
         label = elemAt name 2;
-          command = "${nixBinPath}nix build --no-link .#${escapeAttrPath name}";
+          command = "${nixBinPath}nix build --no-link .#${escapeAttrPath name}${nixArgs'}";
         inherit agents;
       };
 
@@ -94,7 +96,7 @@ rec {
         command = pkgs.writeShellScript "release" ''
           set -euo pipefail
           export PATH='${pkgs.github-cli}/bin':"$PATH"
-          nix build .#'release.${ciSystem'}'
+          nix build .#'release.${ciSystem'}${nixArgs'}'
           timestamp=$(git show -s --format=%ci)
           date=$(cut -d\  -f1 <<< $timestamp)
           time=$(cut -d\  -f2 <<< $timestamp | sed s/:/-/g)
