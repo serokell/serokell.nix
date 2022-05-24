@@ -41,11 +41,11 @@
       settings.process_names = [
         {
           name = "{{ .Matches.Wrapped }} {{ .Matches.Args }}";
-          cmdline = [ "^/nix/store[^ ]*/(?P<Wrapped>[^ /]*) (?P<Args>.*)" ];
+          cmdline = [ "^/nix/store[^ ]*/(?P<Wrapped>[^ /]*)" ];
         }
         {
-          name = "{{ .Matches.All }}";
-          cmdline = [ "(?P<All>.+)" ];
+          name = "{{ .Matches.Command }}";
+          cmdline = [ "(?P<Command>[^ ]+)" ];
         }
       ];
     };
