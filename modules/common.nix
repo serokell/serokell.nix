@@ -40,7 +40,7 @@
       enable = true;
       settings.process_names = [
         {
-          name = "{{ .Matches.Wrapped }} {{ .Matches.Args }}";
+          name = "{{ .Matches.Wrapped }}";
           cmdline = [ "^/nix/store[^ ]*/(?P<Wrapped>[^ /]*)" ];
         }
         {
