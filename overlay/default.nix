@@ -40,15 +40,39 @@ in
       ${final.reuse}/bin/reuse --root "${src}" lint
     '';
 
-    # Validate a terraform directory.
+    terraformWithModules = { terraform ? final.terraform, terraformDirs ? { "terraform" = []; } }: let
+      addModulesForDirs = lib.mapAttrsToList (dir: modules: let
+        addModules = map ({ name, path }: ''
+          rm -rf "$p/${name}"
+          ln -s ${path} "$p/${name}"
+        '') modules;
+        in ''
+          p="$PWD/terraform/${dir}/.terraform_nix/modules"
+          mkdir -p "$p"
+          ${lib.concatStringsSep "\n" addModules}
+        '') terraformDirs;
+    in final.writeScriptBin "terraform" ''
+      while [[ "$PWD" != '/' ]]; do
+        if [ -f 'flake.nix' ]; then
+          break
+        fi
+        cd ..
+      done
 
-    # FIXME remote modules don't work since they aren't supported by nixpkgs
-    # directly and terraform can't fetch them inside the sandbox
-    validateTerraform = { src, terraform ? final.terraform }: final.runCommand "terraform-check"
-    { inherit src; buildInputs = [ terraform ]; } ''
-      cp -r $src ./terraform
-      terraform init -backend=false terraform
-      terraform validate terraform
+      if [ "$PWD" = '/' ]; then
+        exit 1
+      fi
+
+      ${lib.concatStringsSep "\n" addModulesForDirs}
+
+      ${terraform}/bin/terraform "$@"
+    '';
+
+    # Validate terraform directory
+    validateTerraform = { src, path ? "terraform", terraform ? final.terraform }: final.runCommand "terraform-check" { } ''
+      cp -a --no-preserve=mode ${src}/. .
+      ${terraform}/bin/terraform -chdir=${path} init -backend=false
+      ${terraform}/bin/terraform -chdir=${path} validate
       touch $out
     '';
 
