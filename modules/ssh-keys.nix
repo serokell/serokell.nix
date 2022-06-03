@@ -121,4 +121,7 @@
   a-matson = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHwjg5LfgUpvAW36H5Foj4pnaNpE+Q4YU0zkofCGbBH4"
   ];
+  adziahel = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHZyAPU6KDKU0Pl3wa8U45/7N/zs55YexjwfEWMFDiVw andrei.dziahel@serokell.io"
+  ];
 }
