@@ -47,15 +47,12 @@ in
           ln -s ${path} "$p/${name}"
         '') modules;
         in ''
-          p="$PWD/terraform/${dir}/.terraform_nix/modules"
+          p="$PWD/${dir}/.terraform_nix/modules"
           mkdir -p "$p"
           ${lib.concatStringsSep "\n" addModules}
         '') terraformDirs;
     in final.writeScriptBin "terraform" ''
-      while [[ "$PWD" != '/' ]]; do
-        if [ -f 'flake.nix' ]; then
-          break
-        fi
+      while [[ "$PWD" != '/' ]] && [ ! -f 'flake.nix' ]; do
         cd ..
       done
 
