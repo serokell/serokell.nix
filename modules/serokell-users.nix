@@ -52,6 +52,7 @@ in
       "notgne2"
       "cab404"
       "magicrb"
+      "maelstroem"
     ];
 
     # provision users and ssh keys
