@@ -65,11 +65,11 @@
     services.mysql.package = lib.mkOptionDefault pkgs.mariadb;
     services.postgresql.package = lib.mkOptionDefault pkgs.postgresql_12;
 
-    nix.autoOptimiseStore = true;
+    nix.settings.auto-optimise-store = true;
 
     # Use Wasabi cache
-    nix.binaryCaches = ["s3://serokell-private-cache?endpoint=s3.eu-central-1.wasabisys.com&profile=wasabi-cache-read"];
-    nix.binaryCachePublicKeys = ["serokell-1:aIojg2Vxgv7MkzPJoftOO/I8HKX622sT+c0fjnZBLj0="];
+    nix.settings.substituters = ["s3://serokell-private-cache?endpoint=s3.eu-central-1.wasabisys.com&profile=wasabi-cache-read"];
+    nix.settings.trusted-public-keys = ["serokell-1:aIojg2Vxgv7MkzPJoftOO/I8HKX622sT+c0fjnZBLj0="];
 
     nix.extraOptions = ''
       # Allow CI to work when wasabi dies
@@ -116,7 +116,7 @@
     };
 
     security.acme = {
-      email = "operations@serokell.io";
+      defaults.email = "operations@serokell.io";
       acceptTerms = true;
     };
 
