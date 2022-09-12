@@ -84,6 +84,8 @@
       experimental-features = nix-command flakes
     '';
 
+    nix.package = pkgs.wrappedNix;
+
     programs.mosh.enable = true;
 
     security.sudo.wheelNeedsPassword = false;
