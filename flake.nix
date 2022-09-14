@@ -18,8 +18,12 @@
     };
   };
 
-  outputs = { self, nixpkgs, gitignore-nix, flake-utils, nix, deploy-rs, ... }@inputs: ({
-    overlay = import ./overlay inputs;
+  outputs = { self, nixpkgs, gitignore-nix, flake-utils, nix, deploy-rs, ... }@inputs: let
+    nixwrapper = import ./nixwrapper inputs;
+  in ({
+    overlay = final: prev:
+      (import ./overlay inputs) final prev //
+      (nixwrapper.overlays.default final prev);
 
     lib = import ./lib {
       inherit nixpkgs deploy-rs;
@@ -57,5 +61,8 @@
       packages = {
         inherit (pkgs) nixUnstable;
       };
-  }));
+
+      checks = nixwrapper.checks.${system};
+    }
+  ));
 }
