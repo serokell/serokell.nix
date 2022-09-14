@@ -49,7 +49,6 @@ in
       "sweater"
       "balsoft"
       "rvem"
-      "notgne2"
       "cab404"
       "magicrb"
       "maelstroem"
