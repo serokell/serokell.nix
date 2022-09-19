@@ -136,7 +136,9 @@
 
     users.mutableUsers = false;
 
-    nixpkgs.overlays = [ (import ./../overlay inputs) ];
+    nixpkgs.overlays =
+      let nixwrapper = import ../nixwrapper inputs;
+      in [ (import ./../overlay inputs) (nixwrapper.overlays.default) ];
     nix.nixPath = [ "nixpkgs=/etc/nix/nixpkgs" ];
     # A hack to get around Nix not recognizing a runtime dependency on nixpkgs
     environment.etc."nix/nixpkgs".source = "${pkgs.path}";
