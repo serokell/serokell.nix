@@ -31,7 +31,7 @@ let
 
       copyOutputs = final.lib.concatStringsSep "\n" (
         map
-        (out: "cp -rs --no-preserve=mode \"${prev.nix.${out}}\" \"\$${out}\"")
+        (out: "cp -rs --no-preserve=mode \"${final.nix.${out}}\" \"\$${out}\"")
             # oldAttrs.outputs makes more sense here but... it doesn't work
             prev.nix.outputs
             );
