@@ -15,7 +15,7 @@ submod = with lib;{
     default = { "${cfg.mainDomain}" = cfg.dns; };
   };
   mainDomain = mkOption {
-    type = types.str;
+    type = types.nullOr types.str;
     description = "domain to use as primary domain for the cert";
   };
   postRun = mkOption {
@@ -125,8 +125,7 @@ in
       environment.SHELL = "${pkgs.bash}/bin/bash";
       script = let
         mapDomain = name: dns: ''-d "${name}" --dns ${dns}'';
-        primary = mapDomain mainDomain domains."${mainDomain}";
-        domainsStr = lib.concatStringsSep " " ([primary] ++ (lib.remove primary (lib.mapAttrsToList mapDomain domains)));
+        domainsStr = lib.concatStringsSep " " (lib.mapAttrsToList mapDomain domains);
         cmd = ''acme.sh --server ${server} --issue ${lib.optionalString (!production) "--test"} ${domainsStr} --reloadcmd "touch ${statePath}/renewed" --syslog 6 > /dev/null'';
       in
         if consulLock == null then ''
