@@ -26,7 +26,7 @@ in
     * Check the given target path for files with trailing whitespace.
     */
     checkTrailingWhitespace = src: final.build.runCheck ''
-      files=$(grep --recursive --exclude-dir LICENSES --exclude '*.patch' --files-with-matches --binary-files=without-match '[[:blank:]]$' "${src}" || true)
+      files=$(grep --recursive --exclude-dir LICENSES --exclude '*.patch' --exclude-dir .git --files-with-matches --binary-files=without-match '[[:blank:]]$' "${src}" || true)
       if [[ ! -z $files ]]; then
         echo 'Files with trailing whitespace:'
         for f in "''${files[@]}"; do
