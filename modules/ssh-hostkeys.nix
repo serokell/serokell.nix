@@ -3,6 +3,7 @@ rec {
     "[enif.pegasus.serokell.team]:17788" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKBl5xDVPpBwnDjy3/vocWhkxd4gzG2/XhCqu4BKBqSP"; };
     "[helvetios.pegasus.serokell.team]:17788" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGMP/QMBHckFeyyexEXkb/7mda52G5wZsdSE78fBMmop"; };
     "[tt.serokell.io]:17788" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN/DPi5VvEabvJIYCIeydk6JlIdrbBw5Y4OYC3Z1WFc9"; };
+    "[tejat-prior.gemini.serokell.team]:17788" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOUHTzCw27rNtOFGt6ILtAcWDIMSWWy78m1uyfTDjrYW"; };
     "agora.tezos.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH/2LMJECtHWdJDvWBcGFtwJmFnGp1nTt3dE+Tibig+g"; };
     "blend.stakerdao.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPyV4zyowfZf71F2MlRFyIvtWfqWFhc+lxqyCHXQWa2X"; };
     "bridge.stakerdao.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL8S9rAPQ9Ha+tcRBgYSayvQ+7iV15muiYNiwWYOLc8C"; };
