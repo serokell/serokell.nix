@@ -60,6 +60,8 @@
       };
       packages = {
         inherit (pkgs) nixUnstable;
+      } // pkgs.lib.optionalAttrs (! lib.hasInfix "darwin" system) {
+        inherit (pkgs) benchwrapper;
       };
 
       checks = nixwrapper.checks.${system};

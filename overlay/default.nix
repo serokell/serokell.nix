@@ -12,6 +12,48 @@ in
   # Uses sources.mix-to-nix and sources.gitignore
   nixUnstable = inputs.nix.defaultPackage.${final.system};
 
+  benchwrapper = prev.writeShellScriptBin "benchwrapper" ''
+    set -euo pipefail
+
+    # number of cores to run the wrapped program on
+    test_cpus="$1"
+    shift
+
+    sctl=${prev.systemd}/bin/systemctl
+    srun=${prev.systemd}/bin/systemd-run
+
+    #############
+
+    ncpus=$(( $(${prev.util-linux}/bin/lscpu -e | wc -l) - 1 ))
+
+    if [[ -z "$test_cpus" || "$test_cpus" -le 0 || "$test_cpus" -gt "$(( $ncpus / 2 ))" ]]; then
+      echo "make sure to double-check `ncpus`"
+      exit 1
+    fi
+
+    fullrange="0-$(( $ncpus - 1 ))"
+    sysrange="0-$(( $ncpus - $test_cpus - 1 ))"
+    shieldrange="$(( $ncpus - $test_cpus ))-$(( $ncpus - 1 ))"
+
+    cleanup() {
+      # restore full core utilization for all services
+      $sctl set-property --runtime system.slice AllowedCPUs="$fullrange"
+      $sctl set-property --runtime user.slice AllowedCPUs="$fullrange"
+    }
+
+    # make sure to allow scheduling on all cores again in case of error
+    trap cleanup EXIT
+
+    # limit user and system services to certain cores
+    $sctl set-property --runtime system.slice AllowedCPUs="$sysrange"
+    $sctl set-property --runtime user.slice AllowedCPUs="$sysrange"
+
+    # run all arguments as a command using systemd-run inheriting path and limited to $shieldrange cpus
+    $srun --nice=-20 --slice shield -EPATH=$PATH --property=AllowedCPUs="$shieldrange" -t -- "$@"
+
+    cleanup
+  '';
+
   build = {
     /*
     * Run a series of commands only for their exit status.
