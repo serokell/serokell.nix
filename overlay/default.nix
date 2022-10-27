@@ -49,7 +49,7 @@ in
     $sctl set-property --runtime user.slice AllowedCPUs="$sysrange"
 
     # run all arguments as a command using systemd-run inheriting path and limited to $shieldrange cpus
-    $srun --nice=-20 --slice shield -EPATH=$PATH --property=AllowedCPUs="$shieldrange" -t -- "$@"
+    $srun --nice=-20 --slice shield -EPATH=$PATH --property=AllowedCPUs="$shieldrange" --pty --same-dir --collect -- "$@"
 
     cleanup
   '';
