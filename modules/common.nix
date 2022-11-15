@@ -20,7 +20,7 @@
 
     services.earlyoom.enable = lib.mkDefault true;
 
-    programs.atop.enable = true;
+    programs.atop.enable = false;
 
     environment.etc."default/atop".text = ''
       LOGOPTS=""
