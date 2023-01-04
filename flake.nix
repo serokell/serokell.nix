@@ -31,8 +31,17 @@
       gitignore-nix = import gitignore-nix { inherit (nixpkgs) lib; };
     };
 
-    nixosModules = {
+    darwinModules = {
       common = import ./modules/common.nix;
+    };
+
+    nixosModules = {
+      common = {...}: {
+        imports = [
+          ./modules/common.nix
+          ./modules/common-non-darwin.nix
+        ];
+      };
 
       acme-sh = import ./modules/acme-sh.nix;
       vault-secrets = import ./modules/vault-secrets.nix;
