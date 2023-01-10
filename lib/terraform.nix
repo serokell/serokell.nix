@@ -11,9 +11,13 @@ in
 , tfConfig ? null
 , subdir ? defaultSubDir
 , backend ? true
-}@inputs:
+}:
 rec {
-  mkApp = {command, tfConfig ? inputs.tfConfig, subdir ? inputs.subdir, backend ? inputs.backend}: {
+  mkApp = let
+    defaultSubDir = subdir;
+    defaultBackend = backend;
+    defaultTFConfig = tfConfig;
+  in { command, tfConfig ? defaultTFConfig, subdir ? defaultSubDir, backend ? defaultBackend }: {
     type = "app";
     program = toString (pkgs.writers.writeBash command ''
       pushd ${toString subdir} >/dev/null
