@@ -1,4 +1,0 @@
-steps:
-  - label: Check Nix flake
-    commands:
-      - nix flake check -L
