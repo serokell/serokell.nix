@@ -33,6 +33,7 @@
 
     darwinModules = {
       common = import ./modules/common.nix;
+      serokell-users = import ./modules/serokell-users-darwin.nix;
     };
 
     nixosModules = {
