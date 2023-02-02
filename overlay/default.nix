@@ -9,9 +9,6 @@ let
   inherit (final) lib;
 in
 {
-  # Uses sources.mix-to-nix and sources.gitignore
-  nixUnstable = inputs.nix.defaultPackage.${final.system};
-
   benchwrapper = prev.writers.writePython3Bin "benchwrapper" {} (builtins.readFile ./benchwrapper.py);
 
   build = {

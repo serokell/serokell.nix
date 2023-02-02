@@ -64,13 +64,9 @@
       };
     in with pkgs; {
       devShell = mkShell {
-        buildInputs = [
-          nixUnstable
-        ];
+        buildInputs = [ ];
       };
-      packages = {
-        inherit (pkgs) nixUnstable;
-      } // pkgs.lib.optionalAttrs (! lib.hasInfix "darwin" system) {
+      packages = pkgs.lib.optionalAttrs (! lib.hasInfix "darwin" system) {
         inherit (pkgs) benchwrapper;
       };
 
