@@ -64,9 +64,7 @@
       };
     in with pkgs; {
       devShell = mkShell {
-        buildInputs = [
-          nix
-        ];
+        buildInputs = [ ];
       };
       packages = pkgs.lib.optionalAttrs (! lib.hasInfix "darwin" system) {
         inherit (pkgs) benchwrapper;
