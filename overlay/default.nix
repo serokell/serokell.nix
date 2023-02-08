@@ -40,6 +40,10 @@ in
       ${final.reuse}/bin/reuse --root "${src}" lint
     '';
 
+    shellcheck = src: final.buildCheck "shellcheck" ''
+      find . -name '*.sh' -exec "${final.shellcheck}/bin/shellcheck" {} +
+    '';
+
     terraformWithModules = { terraform ? final.terraform, terraformDirs ? { "terraform" = []; } }: let
       addModulesForDirs = lib.mapAttrsToList (dir: modules: let
         addModules = map ({ name, path }: ''
