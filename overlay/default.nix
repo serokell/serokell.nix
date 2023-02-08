@@ -7,24 +7,25 @@ inputs:
 final: prev:
 let
   inherit (final) lib;
+  /*
+  * Run a series of commands only for their exit status.
+  */
+  runCheck = name: script: final.runCommand name {} ''
+    {
+      ${script}
+    } && touch "$out"
+  '';
 in
 {
   benchwrapper = prev.writers.writePython3Bin "benchwrapper" {} (builtins.readFile ./benchwrapper.py);
 
   build = {
-    /*
-    * Run a series of commands only for their exit status.
-    */
-    runCheck = script: final.runCommand "check" {} ''
-      {
-        ${script}
-      } && touch "$out"
-    '';
+    inherit runCheck;
 
     /*
     * Check the given target path for files with trailing whitespace.
     */
-    checkTrailingWhitespace = src: final.build.runCheck ''
+    checkTrailingWhitespace = src: final.build.runCheck "check-trailing-whitespace" ''
       files=$(grep --recursive --exclude-dir LICENSES --exclude '*.patch' --exclude-dir .git --files-with-matches --binary-files=without-match '[[:blank:]]$' "${src}" || true)
       if [[ ! -z $files ]]; then
         echo 'Files with trailing whitespace:'
@@ -35,7 +36,7 @@ in
       fi
     '';
 
-    reuseLint = src: final.build.runCheck ''
+    reuseLint = src: final.build.runCheck "reuse-lint" ''
       ${final.reuse}/bin/reuse --root "${src}" lint
     '';
 
@@ -73,9 +74,31 @@ in
     '';
 
     haskell = {
-      hlint = src: final.runCommand "hlint.html" {} ''
-        ${final.hlint}/bin/hlint "${src}" --no-exit-code --report=$out -j
+      hlint = src: runCheck "hlint" ''
+        cd ${src}
+        ${final.haskellPackages.hlint}/bin/hlint .
       '';
+      stylish-haskell = src: runCheck "stylish-haskell" ''
+          files=()
+          cd ${src}
+          while IFS=  read -r -d $'\0'; do
+            files+=("$REPLY")
+          done < <(find . -name '.stack-work' -prune -o -name '.dist-newstyle' -prune -o -name '*.hs' -print0)
+          exit_code="0"
+          for file in "''${files[@]}"; do
+            set +e
+            diff="$("${final.haskellPackages.stylish-haskell}/bin/stylish-haskell" "$file" | diff "$file" -)"
+            if [ "$diff" != "" ]; then
+                echo "$file"
+                echo "$diff"
+                exit_code="1"
+            fi
+            set -e
+          done
+          if [[ "$exit_code" != "0" ]]; then
+            exit "$exit_code"
+          fi
+        '';
 
       haddock = name: docs:
         let
