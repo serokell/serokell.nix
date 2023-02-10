@@ -40,7 +40,7 @@ in
       ${final.reuse}/bin/reuse --root "${src}" lint
     '';
 
-    shellcheck = src: final.buildCheck "shellcheck" ''
+    shellcheck = src: final.build.runCheck "shellcheck" ''
       find . -name '*.sh' -exec "${final.shellcheck}/bin/shellcheck" {} +
     '';
 
