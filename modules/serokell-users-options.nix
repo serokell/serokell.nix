@@ -3,7 +3,7 @@ let
   inherit (lib) mkOption types;
 in
 {
-  wheelUsers = mkOption {
+  wheelUsers = mkOption rec {
     type = types.listOf types.str;
     description = "Users added to wheel group";
     example = [ "gosha" "masha" ];
@@ -17,6 +17,7 @@ in
       "magicrb"
       "maelstroem"
     ];
+    apply = users: default ++ users;
   };
 
   wheelUsersExtraGroups = mkOption {
