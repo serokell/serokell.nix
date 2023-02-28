@@ -91,7 +91,7 @@ in
           exit_code="0"
           for file in "''${files[@]}"; do
             set +e
-            diff="$("${final.haskellPackages.stylish-haskell}/bin/stylish-haskell" "$file" | diff "$file" -)"
+            diff="$("${final.haskellPackages.stylish-haskell}/bin/stylish-haskell" "$file" | diff -u "$file" -)"
             if [ "$diff" != "" ]; then
                 echo "$file"
                 echo "$diff"
