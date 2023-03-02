@@ -13,7 +13,6 @@ in
       "sweater"
       "balsoft"
       "rvem"
-      "cab404"
       "magicrb"
       "sereja"
       "karandit"
