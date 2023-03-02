@@ -15,6 +15,8 @@ in
       "rvem"
       "cab404"
       "magicrb"
+      "sereja"
+      "karandit"
     ];
     apply = users: default ++ users;
   };
