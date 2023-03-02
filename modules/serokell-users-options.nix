@@ -15,7 +15,6 @@ in
       "rvem"
       "cab404"
       "magicrb"
-      "maelstroem"
     ];
     apply = users: default ++ users;
   };
