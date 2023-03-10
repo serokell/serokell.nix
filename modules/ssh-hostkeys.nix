@@ -18,5 +18,6 @@ rec {
     "social-network.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM0fI99uE0u0iExolwIFDMEw9ITX3jNlvSMa+YmzN+ar"; };
     "staging.edna.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAdeUbotl2b/CbCmXWZ0UBkp0kbritHc9Sw//UnFIJi1" ; };
     "www.tezosagora.org" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK3YKZ2BSk/Ysb/qfUVQSbHOkkiALiVjv1DAKTKQFhp3"; };
+    "algenib.pegasus.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKGJVl1ob4KAYGPcJkHdoZMLgnOLDNsyKIgJI/iScAt"; };
   };
 }
