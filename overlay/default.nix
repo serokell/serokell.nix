@@ -114,6 +114,13 @@ in
 
           tar czfh "$out" *
         '';
+
+      hpack = src: runCheck "hpack" ''
+        cp -a --no-preserve=mode ${src}/. ./new
+        cd ./new
+        ${final.hpack}/bin/hpack
+        diff -q -r ${src} .
+      '';
     };
   };
 }
