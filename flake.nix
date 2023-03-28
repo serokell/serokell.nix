@@ -18,12 +18,8 @@
     };
   };
 
-  outputs = { self, nixpkgs, gitignore-nix, flake-utils, nix, deploy-rs, ... }@inputs: let
-    nixwrapper = import ./nixwrapper inputs;
-  in ({
-    overlay = final: prev:
-      (import ./overlay inputs) final prev //
-      (nixwrapper.overlays.default final prev);
+  outputs = { self, nixpkgs, gitignore-nix, flake-utils, nix, deploy-rs, ... }@inputs: ({
+    overlay = import ./overlay;
 
     lib = import ./lib {
       inherit nixpkgs deploy-rs;
@@ -70,8 +66,6 @@
       packages = pkgs.lib.optionalAttrs (! lib.hasInfix "darwin" system) {
         inherit (pkgs) benchwrapper;
       };
-
-      checks = nixwrapper.checks.${system};
     }
   ));
 }

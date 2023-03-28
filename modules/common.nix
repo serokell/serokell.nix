@@ -37,10 +37,8 @@
 
 
     nixpkgs.overlays =
-      let nixwrapper = import ../nixwrapper inputs;
-      in [ (import ./../overlay inputs) (nixwrapper.overlays.default) ];
+      [ (import ./../overlay) ];
 
-    nix.package = pkgs.wrappedNix;
     nix.nixPath = [ "nixpkgs=/etc/nix/nixpkgs" ];
 
     # A hack to get around Nix not recognizing a runtime dependency on nixpkgs
