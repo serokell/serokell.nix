@@ -21,5 +21,6 @@ rec {
     "algenib.pegasus.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKGJVl1ob4KAYGPcJkHdoZMLgnOLDNsyKIgJI/iScAt"; };
     "staging.ment.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMTEXN9yBPSTdFRtOkJGt/CzlemqS/bSzbsOGDRvU/U/"; };
     "anadolu.pegasus.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICCCIIDZGy6K9+j5WsU+ESMOecgM2Vw7tbVDHb6QGhbW"; };
+    "alkabar.pegasus.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICLDHgTk2KG/2AWaIOudYEigQ8vSCwU63ea8wZ3vnXo9"; };
   };
 }
