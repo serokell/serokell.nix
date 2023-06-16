@@ -11,10 +11,16 @@
       description = "AllowedIPs list";
       default = [ "172.21.0.1/32" ];
     };
+    wireguard-peer-persistent-keepalive = lib.mkOption {
+      type = lib.types.nullOr lib.types.int;
+      description = "Optional PersistentKeepalive value for server peer in client config";
+      default = null;
+    };
   };
   polisPeer = {
     allowedIPs = config.wireguard-allowed-ips;
     endpoint = "polis.sagittarius.serokell.team:51820";
     publicKey = "gOS8bfFuFJmEpaZa19i2Q62gKAaTyL+XWCJvmxekqy8=";
+    persistentKeepalive = config.wireguard-peer-persistent-keepalive;
   };
 }

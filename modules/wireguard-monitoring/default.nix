@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, ... }@args:
 
 let
   wireguard-ip = config.wireguard-ip-address;
