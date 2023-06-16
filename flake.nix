@@ -30,7 +30,7 @@
     darwinModules = {
       common = import ./modules/common.nix;
       serokell-users = import ./modules/serokell-users-darwin.nix;
-      wireguard-monitoring = import ./modules/wireguard-monitoring-darwin.nix;
+      wireguard-monitoring = import ./modules/wireguard-monitoring/darwin.nix;
     };
 
     nixosModules = {
@@ -49,7 +49,7 @@
       upload-daemon = import ./modules/services/upload-daemon.nix;
       hetzner-cloud = import ./modules/virtualization/hetzner-cloud.nix;
       ec2 = import ./modules/virtualization/ec2.nix;
-      wireguard-monitoring = import ./modules/wireguard-monitoring.nix;
+      wireguard-monitoring = import ./modules/wireguard-monitoring/default.nix;
     };
   } // flake-utils.lib.eachDefaultSystem (system:
     # (pinned nix-unstable version does not support aarch64-darwin)
