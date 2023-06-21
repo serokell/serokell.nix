@@ -29,11 +29,35 @@ in {
       peers = [ common.polisPeer ];
     };
 
-    # run process-exporter on the wireguard interface
-    #services.prometheus.exporters.process.listenAddress = wireguard-ip;
-
-    # run node-exporter on the wireguard interface
-    #services.prometheus.exporters.node.listenAddress = wireguard-ip;
+    launchd.daemons.prometheus-node-exporter = {
+      script = ''
+        ${pkgs.prometheus-node-exporter}/bin/node_exporter --web.listen-address ${wireguard-ip}:9100
+      '';
+      serviceConfig = {
+        ProcessType = "Interactive";
+        ThrottleInterval = 30;
+        RunAtLoad = true;
+        UserName = "node-exporter";
+        GroupName = "node-exporter";
+        WorkingDirectory = "/var/lib/node-exporter";
+        Umask = 63;
+        StandardErrorPath = "/var/lib/node-exporter/err.log";
+        StandardOutPath = "/var/lib/node-exporter/out.log";
+      };
+    };
+    users = {
+      users.node-exporter = {
+        createHome = true;
+        gid = 2059;
+        uid = 2059;
+        home = "/var/lib/node-exporter";
+      };
+      groups.node-exporter = {
+        gid = 2059;
+      };
+      knownUsers = ["node-exporter"];
+      knownGroups = ["node-exporter"];
+    };
 
     # Run promtail and connect to our Loki instance
     #services.promtail = {
@@ -63,8 +87,5 @@ in {
         #}];
       #};
     #};
-
-    # wait for wireguard before starting node-exporter
-    #systemd.services.prometheus-node-exporter.after = [ "wireguard-wg0.service" ];
   };
 }
