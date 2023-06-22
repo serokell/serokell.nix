@@ -16,13 +16,26 @@
     flake-compat = {
       flake = false;
     };
+    get-tested-src = {
+      url = "github:Sereja313/get-tested/issue-8-emit-ghc-versions";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, gitignore-nix, flake-utils, nix, deploy-rs, ... }@inputs: ({
+  outputs = { self, nixpkgs, gitignore-nix, flake-utils, nix, deploy-rs, haskell-nix, ... }@inputs: let
+    get-tested = (haskell-nix.legacyPackages.x86_64-linux.haskell-nix.cabalProject {
+      src = haskell-nix.legacyPackages.x86_64-linux.haskell-nix.haskellLib.cleanGit {
+        name = "get-tested";
+        src = inputs.get-tested-src;
+      };
+      compiler-nix-name = "ghc944";
+    }).get-tested.components.exes.get-tested;
+
+  in ({
     overlay = import ./overlay;
 
     lib = import ./lib {
-      inherit nixpkgs deploy-rs;
+      inherit nixpkgs deploy-rs get-tested;
       inherit (nixpkgs) lib;
       gitignore-nix = import gitignore-nix { inherit (nixpkgs) lib; };
     };

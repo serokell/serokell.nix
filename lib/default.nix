@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-{ lib, gitignore-nix, nixpkgs, deploy-rs }: {
+{ lib, gitignore-nix, nixpkgs, deploy-rs, get-tested }: {
   src = import ./src.nix { inherit lib gitignore-nix; };
 
   # Extend nixpkgs with multiple overlays
@@ -18,4 +18,6 @@
   pipeline = import ./pipeline.nix { inherit lib nixpkgs deploy-rs; };
 
   terraform = import ./terraform.nix { inherit lib nixpkgs; };
+
+  cabal = import ./cabal.nix { inherit lib nixpkgs get-tested; };
 }
