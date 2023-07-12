@@ -119,6 +119,11 @@ in
         ${final.hpack}/bin/hpack
         diff -q -r ${src} .
       '';
+
+      cabal-check = src: runCheck "cabal check" ''
+        cd ${src}
+        ${final.cabal-install}/bin/cabal check
+      '';
     };
   };
 }
