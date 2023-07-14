@@ -31,7 +31,7 @@ submod = with lib;{
     default = "root";
     description = "User running the ACME client.";
   };
-  
+
   group = mkOption {
     type = types.str;
     default = "root";
@@ -63,6 +63,10 @@ submod = with lib;{
     readOnly = true;
     type = types.str;
   };
+  certDirectory = mkOption {
+    readOnly = true;
+    type = types.str;
+  };
   keyPath = mkOption {
     readOnly = true;
     type = types.str;
@@ -87,9 +91,10 @@ in
     certs = lib.mkOption {
       type = types.attrsOf (types.submodule ({config, name, ...}: (with config; {
         options = submod;
+        config.certDirectory = "${statePath}/cert";
         config.statePath = "${cfg.stateDir}/${name}";
-        config.keyPath = "${statePath}/${mainDomain}/${mainDomain}.key";
-        config.certPath = "${statePath}/${mainDomain}/fullchain.cer";
+        config.keyPath = "${certDirectory}/${mainDomain}.key";
+        config.certPath = "${certDirectory}/fullchain.cer";
       })));
       default = {};
     };
@@ -116,8 +121,8 @@ in
         mkdir -p ${cfg.stateDir}
         chown 'root:root' ${cfg.stateDir}
         chmod 755 ${cfg.stateDir}
-        mkdir -p "${statePath}"
-        chown -R '${user}:${group}' "${statePath}"
+        mkdir -p "${certDirectory}"
+        chown -R '${user}:${group}' "${certDirectory}"
         chmod 750 "${statePath}"
         rm -f "${statePath}/renewed"
       '';
@@ -127,7 +132,15 @@ in
         mapDomain = name: dns: ''-d "${name}" --dns ${dns}'';
         primary = mapDomain mainDomain domains."${mainDomain}";
         domainsStr = lib.concatStringsSep " " ([primary] ++ (lib.remove primary (lib.mapAttrsToList mapDomain domains)));
-        cmd = ''acme.sh --server ${server} --issue ${lib.optionalString (!production) "--test"} ${domainsStr} --reloadcmd "touch ${statePath}/renewed" --syslog 6 > /dev/null'';
+        cmd = pkgs.writeShellScript "renew" ''
+          set -euo pipefail
+          acme.sh --server ${server} --issue ${lib.optionalString (!production) "--test"} ${domainsStr} --syslog 6 > /dev/null
+          acme.sh --install-cert ${domainsStr} \
+            --key-file ${keyPath} \
+            --fullchain-file ${certPath} \
+            --reloadcmd "touch ${statePath}/renewed" \
+            --syslog 6 > /dev/null
+        '';
       in
         if consulLock == null then ''
         ${cmd}
