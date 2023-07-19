@@ -61,6 +61,7 @@
     services.prometheus.exporters.node = {
       enable = true;
       enabledCollectors = [ "systemd" ];
+      extraFlags = [ "--collector.systemd.enable-restarts-metrics" ];
       disabledCollectors = [ "timex" ];
     };
 
