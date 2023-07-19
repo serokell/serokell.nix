@@ -104,4 +104,8 @@
   rinn7e = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJV9uPtRYu/1QeQCKWJbX+39QKSKYzz2E0Kmnk/lvVlJ moremi.vannak@serokell.io"
   ];
+  # Nikolay Yakimov
+  lierdakil = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEhM54jUCbcVv/gyBFXJqGZO33elg3fu0sTtmPPnytMB nikolay.yakimov@serokell.io"
+  ];
 }
