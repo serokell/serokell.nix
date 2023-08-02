@@ -1,99 +1,97 @@
-{ lib }:
+{ nixpkgs, lib, getTestedWithVersions }:
 
 let
-  /* Make a Nix flake for a Haskell project.
-
-     The idea is that, given a Haskell project (e.g. a stack project), this function
-     will return a flake with packages, checks, and apps, for multiple versions
-     of GHC – the ones that you sepcify, plus the “default” one (coming from the
-     project configuration, e.g. stack LTS).
-
-     Note that the resulting flake is “naked” in that it does not include the
-     system name in its outputs, so you should use `flake-utils` or something.
-
-     * Packages will contain, essentially, everything:
-       - Build the library: `nix build .#<package>:lib:<package>`
-       - Build an exectuable: `nix build .#<package>:exe:<executable>`
-       - Build a test: `nix build .#<package>:test:<test>`
-       - Build a benchmark: `nix build .#<package>:bench:<benchmark>`
-     * Checks will run corresponding tests:
-       - Run a test: `nix check .#<package>:test:<test>`
-     * Apps will run corresponding executables:
-       - Run a test: `nix run .#<package>:exe:<executable>`
-
-     Everything above can be prefixed with one of the requested GHC versions:
-
-     * Run a test for a specific GHC version:
-       - `nix check .#ghc<version>:<package>:test:<test>`
-
-     Inputs:
-       - The haskell.nix packages set (i.e. pkgs.haskell-nix)
-       - A haskell.nix *Project function (e.g. pkgs.haskell-nix.stackProject)
-       - Attrs with:
-         - ghcVersions: compiler versions to build with (in addition to the default one)
-         - Any other attributes that will be forwarded to the project function
-
-     Example:
-       makeFlake pkgs.haskell-nix pkgs.haskell-nix.stackProject {
-         src = ./.;
-         ghcVersions = [ "901" ];
-       }
-       =>
-       # Assuming you use `flake-utils.lib.eachSystem [ "x86_64-linux" ]`
-       $ nix flake show
-       <...>
-        ├───apps
-        │   └───x86_64-linux
-        │       ├───"ghc901:package:exe:executable": app
-        │       ├───"ghc901:package:test:test": app
-        │       ├───"package:exe:executable": app
-        │       └───"package:test:test": app
-        ├───checks
-        │   └───x86_64-linux
-        │       ├───"ghc901:package:test:test": derivation 'test-test-1.0.0-check'
-        │       └───"package:test:test": derivation 'test-test-1.0.0-check'
-        ├───devShell
-        │   └───x86_64-linux: development environment 'ghc-shell-for-package'
-        └───packages
-            └───x86_64-linux
-                ├───"ghc901:package:exe:executable": package 'package-exe-executable-1.0.0'
-                ├───"ghc901:package:lib:package": package 'package-lib-package-1.0.0'
-                ├───"ghc901:package:test:test": package 'test-test-1.0.0'
-                ├───"package:exe:executable": package 'package-exe-executable-1.0.0'
-                ├───"package:lib:package": package 'package-lib-package-1.0.0'
-                └───"package:test:test": package 'test-test-1.0.0'
-  */
-  makeFlake = haskellNix: projectF: args@{ ghcVersions, ... }:
+  makeCI = haskellPkgs: {
+    # haskell project root
+    src,
+    # list of ghc versions to build packages, if not specified the ghc versions
+    # will be taken from tested-with stanzas from .cabal files
+    ghcVersions ? [],
+    # whether to build the project with stack, disable if you are not using stack
+    buildWithStack ? true,
+    # stack files to use in addition to stack.yaml
+    stackFiles ? [],
+    # stack resolvers for building the project, they will be replaced in stack.yaml
+    resolvers ? [],
+    # extra haskell.nix arguments
+    extraArgs ? {}
+  }:
+    # if buildWithStack is false, there is no point in specifying resolvers or stackFiles
+    assert !buildWithStack -> resolvers == [] && stackFiles == [];
     let
-      args' = builtins.removeAttrs args [ "ghcVersions" ];
+    pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    replaceDots = builtins.replaceStrings ["."] ["-"];
+    cabalFiles = lib.filter (x: x != "") (lib.splitString "\n"
+      (builtins.readFile (pkgs.runCommand "cabalFiles" {} ''
+        ${pkgs.findutils}/bin/find ${src} -type f -name "*.cabal" > $out
+      '')));
 
-      flakeForGhc = ghcVersion:
-        let
-          compiler-nix-name =
-            if ghcVersion == null
-            then null
-            else "ghc${ghcVersion}";
-          project = projectF (args' // { inherit compiler-nix-name; });
-          prefix =
-              if compiler-nix-name == null
-              then ""
-              else "${compiler-nix-name}:";
-          fixFlakeOutput = name: output:
-            if name == "devShell"
-            then output
-            else lib.mapAttrs' (n: v: lib.nameValuePair (prefix + n) v) output;
-          fixFlake =
-            lib.mapAttrs fixFlakeOutput;
-        in
-          fixFlake (project.flake {});
+    # extract ghc tested-with versions from each .cabal file, keep a list of packages built with each ghc
+    ghc-versions-tested-with = let
+      # ghc versions for each package
+      ghcsPerCabal = map (f: {
+        package = lib.removeSuffix ".cabal" (builtins.baseNameOf f);
+        ghcs = getTestedWithVersions f;}) cabalFiles;
+      # ghc versions from all .cabal files
+      allGhcs = lib.unique (lib.concatMap (lib.getAttr "ghcs") ghcsPerCabal);
+    in lib.genAttrs allGhcs
+      (ghc: map (lib.getAttr "package") (lib.filter (attrs: builtins.elem ghc attrs.ghcs) ghcsPerCabal));
+    ghc-versions = if ghcVersions != [] then ghcVersions else lib.attrNames ghc-versions-tested-with;
+    # invoke haskell.nix for every ghc specified in tested-with stanzas of .cabal files
+    pkgs-per-ghc = let
+      pkgs' = lib.genAttrs ghc-versions
+        (ghc: haskellPkgs.haskell-nix.cabalProject ({
+          inherit src;
+          compiler-nix-name = ghc;
+        } // extraArgs));
+      # we need to filter out packages and checks that are not specified to build with this compiler
+      filterFlake' = ghc: flake': flake' // {
+        packages = filterPackages ghc flake'.packages;
+        checks = filterPackages ghc flake'.checks;
+      };
+      filterPackages = ghc: packages: lib.filterAttrs
+        (n: _: builtins.elem (lib.head (lib.splitString ":" n)) ghc-versions-tested-with.${ghc}) packages;
+    in if ghcVersions != [] then pkgs'
+       else lib.flip lib.mapAttrs pkgs' (n: v: v // { flake' = filterFlake' n v.flake';});
 
-      combineOutputs = name:
-        if name == "devShell"
-        then lib.last
-        else lib.foldl (l: r: l // r) {};
+    # invoke haskell.nix for stack.yaml and every file from stackFiles
+    stackYamls = lib.optionals buildWithStack ([ "stack.yaml" ] ++ stackFiles);
+    pkgs-per-stack-yaml = lib.mapAttrs' (n: v: lib.nameValuePair (replaceDots n) v)
+      (lib.genAttrs stackYamls
+        (stackYaml: haskellPkgs.haskell-nix.stackProject {
+          inherit src stackYaml;
+        } // extraArgs));
 
-    in lib.zipAttrsWith combineOutputs (map flakeForGhc (ghcVersions ++ [null]));
+    # invoke haskell.nix for every resolver specified in resolvers
+    stackResolvers = lib.optionals buildWithStack resolvers;
+    pkgs-per-resolver = lib.mapAttrs' (n: v: lib.nameValuePair (replaceDots n) v)
+      (lib.genAttrs stackResolvers
+        (resolver: haskellPkgs.haskell-nix.stackProject {
+          src = pkgs.runCommand "change resolver" { } ''
+            mkdir -p $out
+            cp -rT ${src} $out
+            ${pkgs.gnused}/bin/sed -i 's/resolver:.*/resolver: ${resolver}/' $out/stack.yaml
+          '';
+        } // extraArgs));
 
+    all-pkgs = pkgs-per-ghc // pkgs-per-stack-yaml // pkgs-per-resolver;
+
+    # all components for each specified ghc version or stack yaml
+    build-all = lib.mapAttrs' (prefix: pkg:
+      lib.nameValuePair "${prefix}:build-all"
+        (pkgs.linkFarmFromDrvs "build-all" (lib.attrValues pkg.flake'.packages))) all-pkgs;
+
+    # all tests for each specified ghc version or stack yaml
+    test-all = lib.mapAttrs' (prefix: pkg:
+      lib.nameValuePair "${prefix}:test-all"
+        (pkgs.linkFarmFromDrvs "test-all" (lib.attrValues pkg.flake'.checks))) all-pkgs;
+
+    # build matrix used in github actions
+    build-matrix = { include = map (prefix: { inherit prefix; }) (ghc-versions ++ (map replaceDots (stackYamls ++ stackResolvers))); };
+
+  in {
+    inherit build-all test-all build-matrix all-pkgs;
+  };
 
   /* Set haskell.nix package config options for all project (local) packages.
 
@@ -108,7 +106,7 @@ let
        pkgs.haskell-nix.stackProject {
           # <...>
           modules = [
-            (optionsLocalPackages = {
+            (optionsLocalPackages {
               ghcOptions = [ "-Werror" ];
             })
           ];
@@ -152,7 +150,5 @@ let
   };
 
 in {
-  inherit makeFlake;
-
-  inherit optionsLocalPackages ciBuildOptions;
+  inherit makeCI ciBuildOptions optionsLocalPackages;
 }
