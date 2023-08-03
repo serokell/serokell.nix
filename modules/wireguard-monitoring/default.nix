@@ -80,9 +80,22 @@ in {
               replacement = "$2";
             }
           ];
-        }];
+        }] ++ (if config.services.nginx.enable
+        then [{
+          job_name = "nginx-error-logs";
+          static_configs = [{
+            targets = [ "localhost" ];
+            labels = {
+              job = "nginx-error-logs";
+              host = config.networking.hostName;
+              __path__ = "/var/log/nginx/*error.log";
+            };
+          }];
+        }] else [ ]);
       };
     };
+
+    users.users.promtail.extraGroups = lib.mkIf config.services.nginx.enable [ "nginx" ];
 
     # wait for wireguard before starting node-exporter
     systemd.services.prometheus-node-exporter.after = [ "wireguard-wg0.service" ];
