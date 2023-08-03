@@ -18,7 +18,7 @@
   config = {
 
     # Default to /tmp on disk, move it to tmpfs if server big enough
-    boot.cleanTmpDir = true;
+    boot.tmp.cleanOnBoot = true;
     documentation.nixos.enable = false;
 
     programs.mosh.enable = true;
@@ -38,7 +38,7 @@
 
     services.openssh = {
       enable = true;
-      passwordAuthentication = false;
+      settings.PasswordAuthentication = false;
       ports = [ 17788 ];
     };
 
