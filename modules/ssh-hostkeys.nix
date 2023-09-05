@@ -21,5 +21,6 @@ rec {
     "staging.ment.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMTEXN9yBPSTdFRtOkJGt/CzlemqS/bSzbsOGDRvU/U/"; };
     "anadolu.pegasus.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICCCIIDZGy6K9+j5WsU+ESMOecgM2Vw7tbVDHb6QGhbW"; };
     "biham.pegasus.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE9HYKeUNkKcMgqfJ86BYdLE90FRgWwxx+qEiEp70Md2"; };
+    "[skat.aquarius.serokell.team]:17788" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILyJ3GkPNLcFGYW46Y7k0SDTuNqIOse03nsNOu0OHLVT"; };
   };
 }
