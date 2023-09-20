@@ -126,4 +126,6 @@ in
       '';
     };
   };
+
+  github = import ./github.nix { inherit (final) gh git writeShellApplication; };
 }
