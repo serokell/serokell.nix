@@ -4,4 +4,5 @@
 
   hardenServices = import ./harden-services.nix;
 
+  userLevelServices = import ./user-level-services.nix;
 }
