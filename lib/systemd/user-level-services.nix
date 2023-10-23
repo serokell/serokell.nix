@@ -3,7 +3,7 @@
 , pkgs ? nixpkgs.legacyPackages.${system}, ... }:
 let
   mkVM = moduleConfig: serviceConfig: nixpkgs.lib.nixosSystem {
-    inherit system;
+    inherit system pkgs;
     modules = [ ({ ... }: {
 
       imports = [ moduleConfig.module ];
