@@ -57,6 +57,7 @@
   # Andre Matsonens
   a-matson = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHwjg5LfgUpvAW36H5Foj4pnaNpE+Q4YU0zkofCGbBH4"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFBoKDpzB037cb/0fFToUEvjx7gQqoE2lJMUSomYHS34 andre.matsonens@serokell.io"
   ];
   # Alexey Danilevsky
   alexey = [
