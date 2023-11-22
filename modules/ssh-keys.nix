@@ -105,4 +105,8 @@
   lierdakil = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEhM54jUCbcVv/gyBFXJqGZO33elg3fu0sTtmPPnytMB nikolay.yakimov@serokell.io"
   ];
+  # Oliver Otchere
+  otcheredev = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEYUTK3xmr+4Hl5U2j9oQNna12modm7p+ch/XTfUnw3y Oliverotchere4@gmail.com"
+  ];
 }
