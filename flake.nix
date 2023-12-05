@@ -12,7 +12,6 @@
       url = "github:hercules-ci/gitignore.nix";
       flake = false;
     };
-
     flake-compat = {
       flake = false;
     };
@@ -62,6 +61,7 @@
       upload-daemon = import ./modules/services/upload-daemon.nix;
       hetzner-cloud = import ./modules/virtualization/hetzner-cloud.nix;
       ec2 = import ./modules/virtualization/ec2.nix;
+      docker = import ./modules/virtualization/docker.nix;
       wireguard-monitoring = import ./modules/wireguard-monitoring/default.nix;
       postgresql-migration = import ./modules/postgresql-migration.nix;
     };
@@ -79,6 +79,9 @@
       };
       packages = pkgs.lib.optionalAttrs (! lib.hasInfix "darwin" system) {
         inherit (pkgs) benchwrapper;
+      };
+      checks = {
+        docker = import ./tests/docker.nix (inputs // { inherit pkgs; });
       };
     }
   ));
