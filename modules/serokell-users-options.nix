@@ -13,9 +13,8 @@ in
       "sweater"
       "balsoft"
       "rvem"
-      "magicrb"
       "sereja"
-      "karandit"
+      "savely"
     ];
     apply = users: default ++ users;
   };
