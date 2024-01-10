@@ -16,7 +16,7 @@
       flake = false;
     };
     get-tested-src = {
-      url = "github:Sereja313/get-tested/issue-8-emit-ghc-versions";
+      url = "github:Kleidukos/get-tested/v0.1.6.0";
       flake = false;
     };
   };

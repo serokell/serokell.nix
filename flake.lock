@@ -301,16 +301,16 @@
     "get-tested-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1687355864,
-        "narHash": "sha256-yQ4coxfnp2Jsw1kvwf2/Zn72Kltze2WrfHN54eLR070=",
-        "owner": "Sereja313",
+        "lastModified": 1704576937,
+        "narHash": "sha256-STgnzFljXb4deHTGrIQc56YMX7Unmiy8P9NWwkChbYI=",
+        "owner": "Kleidukos",
         "repo": "get-tested",
-        "rev": "455bbd047374ed907900b49641a4ea7f0a905709",
+        "rev": "64f016a0c53edfe52c237301ce062455344b51ac",
         "type": "github"
       },
       "original": {
-        "owner": "Sereja313",
-        "ref": "issue-8-emit-ghc-versions",
+        "owner": "Kleidukos",
+        "ref": "v0.1.6.0",
         "repo": "get-tested",
         "type": "github"
       }
