@@ -42,7 +42,6 @@ rec {
     #   "~CLONE_NEWUTS"
     # ];
     RestrictNamespaces = "yes";
-    DeviceAllow = "no";
     IPAddressDeny = "any";
     KeyringMode = "private";
     NoNewPrivileges = "yes";

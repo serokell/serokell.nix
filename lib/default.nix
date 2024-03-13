@@ -11,7 +11,7 @@
 
   haskell = import ./haskell.nix { inherit lib nixpkgs; inherit (cabal) getTestedWithVersions; };
 
-  systemd = import ./systemd;
+  systemd = import ./systemd { inherit lib; };
 
   types = import ./types.nix { inherit lib; };
 
