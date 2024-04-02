@@ -125,6 +125,8 @@ in
         ${final.cabal-install}/bin/cabal check
       '';
 
+      # in order for this check to work, you must set writeHieFiles = true
+      # in the module configuration of your hs-pkgs
       weeder = { weederToml, hs-pkgs }: let
         haskellPkgs = inputs.haskell-nix.legacyPackages.x86_64-linux;
 
