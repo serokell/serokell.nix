@@ -79,9 +79,11 @@ in {
               regex = "(.*);(.+)";
               replacement = "$2";
             }
-          ];
-        }] ++ (if config.services.nginx.enable
-        then [{
+          ] ++ lib.optional (config.virtualisation.docker.enable) {
+            source_labels = [ "__journal_container_name" ];
+            target_label = "container";
+          };
+        }] ++ (lib.optional (config.services.nginx.enable) {
           job_name = "nginx-error-logs";
           static_configs = [{
             targets = [ "localhost" ];
@@ -91,7 +93,7 @@ in {
               __path__ = "/var/log/nginx/*error.log";
             };
           }];
-        }] else [ ]);
+        });
       };
     };
 
