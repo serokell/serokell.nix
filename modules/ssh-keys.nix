@@ -67,10 +67,6 @@
   dmozhevitin = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFjIecdFiY7HHhlpaGtf6Y+14I7QTyZvCBObg1X669MQ <comment>"
   ];
-  # David Feuer
-  treeowl = [
-    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCpZ3I14S4ptu0hKfQNpuU2Fs51aWIMSZ/KHsDhNJEC/ojwH3bjsQ6xZv2TwbS1zw5OSpyVHKWONR0tuIj535StvlLs+Bnqni1okuRq3L9kZag/nkzOHx2tzadqXWkqPRPXk0S4TC5fQE/6z/hUGgzTPh4ZgXJovYBxaB/+IXUVc0WdiKmOF9MMyFdrqW3BNQg9+w91iItoQ7+DXRv7g9JnjmECpdhtWdgu4p4t7JTkHNX7m5a8OicJBJTCTy26TIQ0HuEBZ8tqvJ8RzlbGhx7R0YG27gSXeiPmwCspbH426ECZy8rN9Nbpg6sc1sdeYXfGUpY8kH7r6OlgLjFoAAumoAMcf9GKUEv1eFRhCn5ygBfVHEtx5RN/NnUBpU2Y4ZEI6cLbaGgwcW3iHkpbp1gCYw/ELsSL88cu7WiQZgz2W5mi9YREj/zC5onP9dnW87wgpdF+Z2Fxdx5roZkKrHv0onYOaRlnqnYIn1Wug3y1JQuhWtc7XVUsmC1ixqxSBg8= dfeuer@squirrel"
-  ];
   # Sergey Gulin
   sereja = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH53XxAVvcgx4HnU1/Hi2ISsq8Xf/ZSaiUtA6j8yARFC sergey.gulin@serokell.io"
