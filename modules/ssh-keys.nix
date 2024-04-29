@@ -88,4 +88,8 @@
   lierdakil = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEhM54jUCbcVv/gyBFXJqGZO33elg3fu0sTtmPPnytMB nikolay.yakimov@serokell.io"
   ];
+  # Ruben Astudillo
+  ruben = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDeEgqGkRli0z6ccp9ucndAroo3yShAmU2wAFws+5iGw slack@eureka"
+  ];
 }
