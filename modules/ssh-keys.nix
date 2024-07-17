@@ -84,4 +84,8 @@
   ruben = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDeEgqGkRli0z6ccp9ucndAroo3yShAmU2wAFws+5iGw slack@eureka"
   ];
+  # Heitor Toledo Lassarote de Paula
+  heitor = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH8OXnif02/DPrl9ZjOTC0V+u2nPVoYuO5ZV1ryPUZhg heitor.toledo@serokell.io"
+  ];
 }
