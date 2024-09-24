@@ -19,6 +19,7 @@
       url = "github:Kleidukos/get-tested/v0.1.6.0";
       flake = false;
     };
+    weeder-src.url = "github:ocharles/weeder";
   };
 
   outputs = { self, nixpkgs, gitignore-nix, flake-utils, nix, deploy-rs, haskell-nix, ... }@inputs: let
@@ -31,7 +32,7 @@
     }).get-tested.components.exes.get-tested;
 
   in ({
-    overlay = import ./overlay;
+    overlay = import ./overlay { inherit inputs; };
 
     lib = import ./lib {
       inherit nixpkgs deploy-rs get-tested;

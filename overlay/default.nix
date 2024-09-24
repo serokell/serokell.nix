@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2020 Serokell <https://serokell.io/>
 #
 # SPDX-License-Identifier: MPL-2.0
-
+{ inputs }:
 final: prev:
 let
   inherit (final) lib;
@@ -123,6 +123,38 @@ in
       cabal-check = src: runCheck "cabal check" ''
         cd ${src}
         ${final.cabal-install}/bin/cabal check
+      '';
+
+      # in order for this check to work, you must set writeHieFiles = true
+      # in the module configuration of your hs-pkgs
+      weeder = { weederToml, hs-pkgs }: let
+        haskellPkgs = inputs.haskell-nix.legacyPackages.x86_64-linux;
+
+        # get local package names
+        pkg-names = lib.attrNames (lib.filterAttrs (_: v: (builtins.isAttrs v) && v ? isLocal && v.isLocal) hs-pkgs);
+
+        # get all hie files
+        allHieFiles = final.linkFarmFromDrvs "all-hie-files" (lib.concatMap (name: let
+          hs-pkg = hs-pkgs.${name}.components;
+        in (map (component: component.hie) (
+          lib.optional (hs-pkg ? library) hs-pkg.library
+          ++ lib.attrValues hs-pkg.exes
+          ++ lib.attrValues hs-pkg.tests))) pkg-names);
+
+        # we need weeder to be built using the exact same ghc that is used to generate hie files
+        weeder = (haskellPkgs.haskell-nix.project {
+          compiler-nix-name = "ghc${builtins.replaceStrings ["."] [""] hs-pkgs.ghc.identifier.version}";
+          cabalProjectLocal = builtins.readFile "${inputs.weeder-src}/cabal.project.haskell-nix";
+          src = haskellPkgs.haskell-nix.haskellLib.cleanGit {
+            name = "weeder";
+            src = inputs.weeder-src;
+          };
+          modules = [ { reinstallableLibGhc = false; } ];
+        }).weeder.components.exes.weeder;
+
+      in runCheck "weeder check" ''
+        cd ${allHieFiles}
+        ${weeder}/bin/weeder --config ${weederToml}
       '';
     };
   };
