@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 # configuration options that do not exist for nix-darwin
-{ lib, pkgs, config, options, inputs, ... }:
+{ lib, pkgs, config, options, ... }:
 {
   imports = [
     ./services/nginx.nix
