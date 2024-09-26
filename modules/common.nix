@@ -1,8 +1,7 @@
 # SPDX-FileCopyrightText: 2020 Serokell <https://serokell.io/>
 #
 # SPDX-License-Identifier: MPL-2.0
-
-{ lib, pkgs, config, options, inputs, ... }:
+{ lib, pkgs, config, options, ... }:
 {
   imports = [
     ./ssh-hostkeys.nix
@@ -35,9 +34,6 @@
       experimental-features = nix-command flakes
     '';
 
-
-    nixpkgs.overlays =
-      [ (import ./../overlay) ];
 
     nix.nixPath = [ "nixpkgs=/etc/nix/nixpkgs" ];
 
