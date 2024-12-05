@@ -1602,7 +1602,8 @@
         "haskell-nix": "haskell-nix",
         "nix": "nix_2",
         "nixpkgs": "nixpkgs_7",
-        "weeder-src": "weeder-src"
+        "weeder-src": "weeder-src",
+        "wg-fake-src": "wg-fake-src"
       }
     },
     "stackage": {
@@ -1772,6 +1773,22 @@
       "original": {
         "owner": "ocharles",
         "repo": "weeder",
+        "type": "github"
+      }
+    },
+    "wg-fake-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1729502307,
+        "narHash": "sha256-rQLPvfiSxvaFIYvkGMvgj5tuvoks7j/mjjyHGx6cjIY=",
+        "owner": "lastbyte32",
+        "repo": "wg-fake",
+        "rev": "858a8ebe15b8125c172a71ee9e1becd1c3acbe5f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lastbyte32",
+        "repo": "wg-fake",
         "type": "github"
       }
     },

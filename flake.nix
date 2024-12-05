@@ -20,6 +20,10 @@
       flake = false;
     };
     weeder-src.url = "github:ocharles/weeder";
+    wg-fake-src = {
+      url = "github:lastbyte32/wg-fake";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, gitignore-nix, flake-utils, nix, deploy-rs, haskell-nix, ... }@inputs: let
@@ -43,7 +47,7 @@
     darwinModules = {
       common = import ./modules/common.nix;
       serokell-users = import ./modules/serokell-users-darwin.nix;
-      wireguard-monitoring = import ./modules/wireguard-monitoring/darwin.nix;
+      wireguard-monitoring = (import ./modules/wireguard-monitoring/darwin.nix) {inherit inputs;};
     };
 
     nixosModules = {

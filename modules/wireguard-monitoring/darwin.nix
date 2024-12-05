@@ -1,8 +1,16 @@
-{ config, pkgs, lib, ... }@args:
+{inputs}:{ config, pkgs, lib, ... }@args:
 
 let
   wireguard-ip = config.wireguard-ip-address;
   common = import ./common.nix args;
+
+  wg-fake = pkgs.buildGoModule {
+    pname = "wg-fake";
+    version = "0.0.1";
+    vendorHash = "sha256-ciBIR+a1oaYH+H1PcC8cD8ncfJczk1IiJ8iYNM+R6aA=";
+    src = inputs.wg-fake-src;
+  };
+
 in {
   inherit (common) options;
 
@@ -18,9 +26,12 @@ in {
     #];
 
     # enable wireguard
-    networking.wg-quick.interfaces.wg0 = {
+    networking.wg-quick.interfaces.wg0 = let
       listenPort = 51820;
+    in {
+      inherit listenPort;
       address = [ "${wireguard-ip}/16" ];
+      preUp = "${wg-fake}/wg-fake -s ${common.polisPeer.endpoint} -p ${builtins.toString listenPort}";
 
       # (you have to generate it manually with `wg genkey > private_key`)
       privateKeyFile = "/etc/wireguard/secret";
