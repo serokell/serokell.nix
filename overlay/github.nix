@@ -34,6 +34,11 @@
       if [[ ''${OVERWRITE_RELEASE:-false} == true ]]; then
         # Delete release if it exists
         gh release delete "$release_tag" --yes || true
+        # Delete the tag if it exists to make sure that 'gh release create' uses the latest commit as a tag target
+        if git show-ref --tags "$release_tag" --quiet; then
+          git tag --delete "$release_tag"
+          git push --force --tags
+        fi
       fi
 
       typeset -a release_args
