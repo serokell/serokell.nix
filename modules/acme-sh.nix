@@ -6,7 +6,7 @@
 
 let
   cfg = config.services.acme-sh;
-  dnstype = lib.types.enum [ "dns_aws" "dns_dnsimple" ];
+  dnstype = lib.types.string;
 submod = with lib;{
   domains = mkOption {
     type = types.coercedTo
