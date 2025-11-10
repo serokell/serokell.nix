@@ -13,7 +13,9 @@ in
 , backend ? true
 }:
 rec {
-  tfConfig = pkgs.writeText "config.tf.json" (toJSON tfConfigAst.config);
+  tfConfig = pkgs.runCommand "config.tf.json" {} ''
+    echo '${toJSON tfConfigAst.config}' | ${pkgs.jq}/bin/jq . > $out
+  '';
 
   mkApp = let
     defaultSubDir = subdir;
