@@ -10,11 +10,11 @@ let
   cfg = config.services.borgbackup;
 
   # Helper function to determine if a path is local
+  # Local if it starts with "/" or "." and doesn't contain ":"
   isLocalPath =
     x:
-    builtins.substring 0 1 x == "/" # absolute path
-    || builtins.substring 0 1 x == "." # relative path
-    || builtins.match "[.*:.*]" x == null; # not machine:path
+    (builtins.substring 0 1 x == "/" || builtins.substring 0 1 x == ".")
+    && !(lib.hasInfix ":" x);
 
   # Helper function to create password environment variables
   mkPassEnv =
@@ -50,26 +50,7 @@ let
 in
 
 {
-  options = {
-    services.borgbackup.jobs = mkOption {
-      type = types.attrsOf (types.submodule {
-        options = {
-          enableCheck = mkOption {
-            type = types.bool;
-            default = true;
-            description = ''
-              Whether to enable weekly repository checks for this borgbackup job.
-              This creates a systemd service and timer that runs 'borg check' weekly.
-            '';
-          };
-        };
-      });
-    };
-  };
-
   config = mkIf (cfg.jobs != {}) {
-    systemd.services = mapAttrs' mkCheckService (
-      filterAttrs (name: jobCfg: jobCfg.enableCheck or true) cfg.jobs
-    );
+    systemd.services = mapAttrs' mkCheckService cfg.jobs;
   };
 }
