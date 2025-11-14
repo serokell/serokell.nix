@@ -116,7 +116,7 @@ in
 
     moduleRoots = mkOption {
       type = types.listOf types.str;
-      default = [ (toString (lib.dirOf ./.)) ];
+      default = [ (toString (builtins.dirOf ./.)) ];
       example = [ "/path/to/my/modules" ];
       description = ''
         Path prefixes for modules to check. By default, automatically set to
