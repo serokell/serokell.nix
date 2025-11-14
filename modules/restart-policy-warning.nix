@@ -107,23 +107,26 @@ in
       example = [ "/path/to/other/nixpkgs" ];
       description = ''
         Additional upstream root paths to consider when determining if a
-        service comes from upstream. By default, pkgs.path (nixpkgs) is
-        always included.
+        service comes from upstream.
+        
+        The nixpkgs path (pkgs.path) is automatically included, so you only
+        need to add this option if you have additional upstream sources.
       '';
     };
 
     moduleRoots = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ (toString (lib.dirOf ./.)) ];
       example = [ "/path/to/my/modules" ];
       description = ''
-        If non-empty, only warn about services whose provenance includes one
-        of these path prefixes. This allows you to scope warnings to only
-        your organization's modules, avoiding the need to detect upstream
-        services at all.
+        Path prefixes for modules to check. By default, automatically set to
+        the repository containing this module (serokell.nix), so warnings only
+        apply to services defined in this repository's modules.
         
-        When empty (default), warnings apply to all non-upstream services
-        with known provenance.
+        Set to [] to check all non-upstream services with known provenance
+        instead of scoping to specific module directories.
+        
+        Add additional paths to include services from other module repositories.
       '';
     };
 
