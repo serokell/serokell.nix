@@ -65,6 +65,7 @@
       docker = import ./modules/virtualization/docker.nix;
       wireguard-monitoring = import ./modules/wireguard-monitoring/default.nix;
       postgresql-migration = import ./modules/postgresql-migration.nix;
+      restart-policy-warning = import ./modules/restart-policy-warning.nix;
     };
   } // flake-utils.lib.eachDefaultSystem (system:
     # (pinned nix-unstable version does not support aarch64-darwin)
