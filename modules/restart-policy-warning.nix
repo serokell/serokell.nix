@@ -15,15 +15,21 @@ let
 
   declPathsFor = name:
     let
-      opt = lib.getAttrFromPath ["systemd" "services" name] options;
-      decls = opt.declarations or [];
-    in map (d:
-      if builtins.typeOf d == "string"
-      then lib.head (lib.splitString ":" d)
-      else if builtins.isAttrs d && d ? file
-      then d.file
-      else toString d
-    ) decls;
+      pathFor = ["systemd" "services" name];
+    in
+      if lib.hasAttrByPath pathFor options
+      then
+        let
+          opt = lib.getAttrFromPath pathFor options;
+          decls = opt.declarations or [];
+        in map (d:
+          if builtins.typeOf d == "string"
+          then lib.head (lib.splitString ":" d)
+          else if builtins.isAttrs d && d ? file
+          then d.file
+          else toString d
+        ) decls
+      else [];
 
   isFromNixpkgs = name:
     let paths = declPathsFor name;
