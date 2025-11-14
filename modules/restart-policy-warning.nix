@@ -2,38 +2,41 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-{ config, lib, pkgs, options, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
 let
   cfg = config.serokell.restartPolicyWarning;
 
-  nixpkgsPath = toString pkgs.path;
+  upstreamRoots = [ (toString pkgs.path) ] ++ cfg.upstreamRoots;
 
-  serviceNames = builtins.attrNames config.systemd.services;
+  svcFor = name: builtins.getAttr name config.systemd.services;
 
-  declPathsFor = name:
+  # Extract provenance paths from service metadata
+  originPathsFor = name:
     let
-      pathFor = ["systemd" "services" name];
+      svc = svcFor name;
+      m = (svc._module or {});
+      toPath = d:
+        if builtins.typeOf d == "string"
+        then lib.head (lib.splitString ":" d)
+        else if builtins.isAttrs d && d ? file
+        then toString d.file
+        else toString d;
     in
-      if lib.hasAttrByPath pathFor options
-      then
-        let
-          opt = lib.getAttrFromPath pathFor options;
-          decls = opt.declarations or [];
-        in map (d:
-          if builtins.typeOf d == "string"
-          then lib.head (lib.splitString ":" d)
-          else if builtins.isAttrs d && d ? file
-          then d.file
-          else toString d
-        ) decls
-      else [];
+      (map toPath (m.files or [])) ++ (map toPath (m.declarations or []));
 
-  isFromNixpkgs = name:
-    let paths = declPathsFor name;
-    in lib.any (p: lib.hasPrefix nixpkgsPath (toString p)) paths;
+  # Check if any path has a prefix in the given list
+  fromAnyPrefix = paths: prefixes:
+    lib.any (p: lib.any (pref: lib.hasPrefix (toString pref) (toString p)) prefixes) paths;
+
+  isFromUpstream = name: fromAnyPrefix (originPathsFor name) upstreamRoots;
+  
+  isFromMyModules = name:
+    cfg.moduleRoots != [] && fromAnyPrefix (originPathsFor name) cfg.moduleRoots;
+
+  hasUnknownProvenance = name: (originPathsFor name) == [];
 
   isInExtraPrefixes = name:
     lib.any (prefix: lib.hasPrefix prefix name) cfg.extraPrefixes;
@@ -41,24 +44,42 @@ let
   isIgnored = name:
     lib.elem name cfg.ignore;
 
-  isExternalService = name:
-    !(isFromNixpkgs name) && !(isInExtraPrefixes name) && !(isIgnored name);
+  # Determine if a service is in scope for warnings
+  inScope = name:
+    if cfg.moduleRoots != []
+    then isFromMyModules name
+    else true;
+
+  # Determine if a service is external (should be warned about)
+  isExternal = name:
+    if cfg.moduleRoots != []
+    then
+      # If moduleRoots specified, only warn about services from those modules
+      isFromMyModules name
+    else
+      # Otherwise, warn about services that are known and not from upstream
+      # (conservative: don't warn if provenance is unknown)
+      (!hasUnknownProvenance name) && (!isFromUpstream name);
 
   needsRestartWarning = name:
     let
-      service = config.systemd.services.${name};
-      restart = service.serviceConfig.Restart or "no";
-      type = service.serviceConfig.Type or "";
+      svc = svcFor name;
+      restart = svc.serviceConfig.Restart or "no";
+      type = svc.serviceConfig.Type or "";
     in
       cfg.enable
-      && isExternalService name
+      && inScope name
+      && (cfg.warnIfUnknown || !hasUnknownProvenance name)
+      && isExternal name
+      && !(isInExtraPrefixes name)
+      && !(isIgnored name)
       && restart == "no"
       && type != "oneshot";
 
   warningMessages = lib.concatMap (name:
     lib.optional (needsRestartWarning name)
       "Service '${name}.service' does not have a restart policy, please consider adding one."
-  ) serviceNames;
+  ) (builtins.attrNames config.systemd.services);
 
 in
 {
@@ -69,10 +90,52 @@ in
       description = ''
         Enable warnings for systemd services without restart policies.
         
-        This module warns about custom (non-nixpkgs) systemd services that
-        don't have an explicit restart policy configured. It uses the module
-        system's provenance metadata to determine which services come from
-        nixpkgs and which are external/custom.
+        This module warns about systemd services that don't have an explicit
+        restart policy configured. It uses the module system's provenance
+        metadata to determine which services come from upstream (nixpkgs) and
+        which are external/custom.
+        
+        By default, it only warns about services with known provenance that
+        are not from upstream. Services with unknown provenance are skipped
+        to avoid false positives.
+      '';
+    };
+
+    upstreamRoots = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      example = [ "/path/to/other/nixpkgs" ];
+      description = ''
+        Additional upstream root paths to consider when determining if a
+        service comes from upstream. By default, pkgs.path (nixpkgs) is
+        always included.
+      '';
+    };
+
+    moduleRoots = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      example = [ "/path/to/my/modules" ];
+      description = ''
+        If non-empty, only warn about services whose provenance includes one
+        of these path prefixes. This allows you to scope warnings to only
+        your organization's modules, avoiding the need to detect upstream
+        services at all.
+        
+        When empty (default), warnings apply to all non-upstream services
+        with known provenance.
+      '';
+    };
+
+    warnIfUnknown = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        If true, warn about services even when provenance cannot be determined.
+        
+        By default (false), services with unknown provenance are skipped to
+        avoid false positives. Enable this only if you want to be notified
+        about all services without restart policies, regardless of origin.
       '';
     };
 
@@ -106,7 +169,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && lib.hasAttrByPath [ "systemd" "services" ] config) {
     warnings = warningMessages;
   };
 }
