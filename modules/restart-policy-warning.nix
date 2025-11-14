@@ -59,7 +59,7 @@ in
   options.serokell.restartPolicyWarning = {
     enable = mkOption {
       type = types.bool;
-      default = false;
+      default = true;
       description = ''
         Enable warnings for systemd services without restart policies.
         
