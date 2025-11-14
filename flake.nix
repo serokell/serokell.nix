@@ -57,6 +57,7 @@
       acme-sh = import ./modules/acme-sh.nix;
       vault-secrets = import ./modules/vault-secrets.nix;
       serokell-users = import ./modules/serokell-users.nix;
+      borgbackup-check = import ./modules/services/borgbackup-check.nix;
       hackage-search = import ./modules/services/hackage-search.nix;
       nginx = import ./modules/services/nginx.nix;
       upload-daemon = import ./modules/services/upload-daemon.nix;
