@@ -1,8 +1,4 @@
 {
-  # Alexander Bantyev
-  balsoft = [
-    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDd2OdcSHUsgezuV+cpFqk9+Svtup6PxIolv1zokVZdqvS8qxLsA/rwYmQgTnuq4/zK/GIxcUCH4OxYlW6Or4M4G7qrDKcLAUrRPWkectqEooWRflZXkfHduMJhzeOAsBdMfYZQ9024GwKr/4yriw2BGa8GbbAnQxiSeTipzvXHoXuRME+/2GsMFAfHFvxzXRG7dNOiLtLaXEjUPUTcw/fffKy55kHtWxMkEvvcdyR53/24fmO3kLVpEuoI+Mp1XFtX3DvRM9ulgfwZUn8/CLhwSLwWX4Xf9iuzVi5vJOJtMOktQj/MwGk4tY/NPe+sIk+nAUKSdVf0y9k9JrJT98S/"
-  ];
   # Diogo Castro
   diogo = [
     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDFHMABp4V7K0FV+vRv+m6kG2Ai1o5YRzIUm4+fdOjfmghp8cdRI7v6NAIj4Eqb/yRVCr7HTyqzcWo86Y6xBcumy9EVW5+xq6cJsf7x6iN8e5mvlYG/irRE6kN7Z8/DyDSerZuMcHrmgirNpBPEOsj00d8DrIN27WIdXadqNCMGkxnm5XggM9kLWY+Y0LfKGENuIrS4wS+k2UeRJriMpHvgiZvLxFirwfgVcZSuxsocXRovIU5Y9Wo/hERdo7M69ZIxMRdkxHMJAofGBAIYrTrKKc92E2k6v4kRy5gpqfBFiDOPQyDdtPuHKAyzmNcJTiI6/gzaex3g+tyw5Dq3JjNGjZnEyaSCSYOZcJkggBV5E6a5WVp4hIQiyGetRs159KLXuR92IJaxPCg4aUQPEYX6eTeepXPYYErye8b/3i8y6thC5xs3VZ/FMYkrmpFStMiDROVNSW9qGBZq+aI8PeWZ27PJB2S18e4RJ+A+xGUen0zqQbKQa16w3AN/cRF40RgCU4iN9Q2XSyT2ZwJ3uyNkOOK3hdLzaARtwqjhQ1yP3LBUIKWZvuP7W6xPdoydFR0nufmzNWBngFj6rIajB+OHdNzMeTovwBH3kxmAzyIcMYmbGWIV9Rm0LQtXo5xp9WocWaxQo/q180MOIT8GFK7nriGAvLivC5FnvNUFRySbuw== diogo.castro@serokell.io"
@@ -53,10 +49,6 @@
   # Dmitry Laptov
   savely = [
     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC4DanF/bpCZz7P5OFdXWvkEq4I1IKzWShnBFAxeZrzyt3eYl+6JQ0OCYqsSV+3YwlfceSeUpJUec884YmBsCt6Dt3NG4/jpR769WKKNJ8u4ddwqVBFNOOIafGLO3j5+ilbmJsuTPz0tbRtLqyK3a2PYfh/yP5TpNv05mTGQf5SN75fMV4MUVCrm3A1CRTXssT6rWPqW2u3tOb7OYOoT9UiGjLGKc4X9bDT638SAX77QzSFNdTyhS4gIDEmkTP5/TC/28eN+D0uIh+JGqNQU1AUPZ744q+SkdQ9PniCiuAFmf5Gpg1xY392QY6jku+70NQLB48Wtjd00RgQ/MD8ojQuqw6h+7ug2VF/hWgeRauy9MOGNcXhTgWLdFIMdmeooXG8zBxjr1PiHHRDHeulLTrY71GwFXss6gIwUGOSmLrVvFlx4xrNGpcQpGcbA1WF4J/VM+BUTQiV0sR3jsZZsAgcQ1/yuHFZtQfrXSqGaie+cqDysfOIcxEZVD4vqFgz8EgrKIedOT+26ly+kez4WcbNYjqDZef2bv6YawcEhvcn8jgd/ht16ZUqxauFyqsWv7vbw+rO/k2Hv9XpcesuiefPgo4uHmpn6kAsGdhk/jwdKO2QZIfHIrr3jWFPQd+T/hlCcTf5yC3Txr4c2KgHnWMn5wQnG02X36RhQ2wnoRtn+Q== cardno:20_637_951"
-  ];
-  # Dmitriy Mozhevitin
-  dmozhevitin = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFjIecdFiY7HHhlpaGtf6Y+14I7QTyZvCBObg1X669MQ <comment>"
   ];
   # Sergey Gulin
   sereja = [
