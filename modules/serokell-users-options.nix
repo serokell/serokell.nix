@@ -11,7 +11,6 @@ in
       "gromak"
       "jaga"
       "sweater"
-      "balsoft"
       "rvem"
       "sereja"
       "savely"
