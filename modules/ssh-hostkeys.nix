@@ -19,7 +19,7 @@ rec {
       "www.tezosagora.org" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK3YKZ2BSk/Ysb/qfUVQSbHOkkiALiVjv1DAKTKQFhp3"; };
       "algenib.pegasus.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKGJVl1ob4KAYGPcJkHdoZMLgnOLDNsyKIgJI/iScAt"; };
       "staging.ment.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMTEXN9yBPSTdFRtOkJGt/CzlemqS/bSzbsOGDRvU/U/"; };
-      "biham.pegasus.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE9HYKeUNkKcMgqfJ86BYdLE90FRgWwxx+qEiEp70Md2"; };
+      "biham.pegasus.serokell.team" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBY+CycSCJEgsZbNrSiyC8/5PyPpPjq4R3AT2dQY+BO3"; };
       "[skat.aquarius.serokell.team]:17788" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILyJ3GkPNLcFGYW46Y7k0SDTuNqIOse03nsNOu0OHLVT"; };
       "homam.pegasus.serokell.team" = { publicKey =  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEraUrGl1ovuPyKMeEJtG/XN3OlpSomq0FWhN1BIi2kZ"; };
       "morava.pegasus.serokell.team" = { publicKey =  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICoXmGW0mxq4emctkb06EoLOtDu+9mLKMDfy/qwQbVMB"; };
