@@ -37,75 +37,81 @@ in {
     # run node-exporter on the wireguard interface
     services.prometheus.exporters.node.listenAddress = wireguard-ip;
 
-    # Run Grafana Alloy and connect to our Loki instance
-    services.alloy = {
-      enable = true;
-      extraFlags = [ "--storage.path=/var/lib/alloy" ];
+    virtualisation.docker.logDriver = "journald";
 
-      configPath = "/etc/alloy/config.alloy";
-    };
+    # Run Grafana Alloy and connect to our Loki instance
+    services.alloy.enable = true;
 
     environment.etc."alloy/config.alloy".text = ''
-        loki.write "loki" {
-          endpoint {
-            url = "http://172.21.0.1:3100/loki/api/v1/push"
-          }
+      // Loki endpoint all sources forward to
+      loki.write "loki" {
+        endpoint {
+          url = "http://172.21.0.1:3100/loki/api/v1/push"
+        }
+      }
 
-          external_labels = {}
+      // Relabeling applied to the systemd journal
+      loki.relabel "journal" {
+        forward_to = []
+
+        rule {
+          source_labels = ["__journal__uid"]
+          target_label  = "user_id"
         }
 
-        loki.relabel "journal" {
-          forward_to = [loki.write.loki.receiver]
-
-          rule {
-            source_labels = ["__journal__uid"]
-            target_label  = "user_id"
-          }
-
-          rule {
-            source_labels = ["__journal__systemd_unit"]
-            target_label  = "unit"
-          }
-
-          // Override unit with systemd user unit when present
-          rule {
-            source_labels = ["__journal__systemd_unit", "__journal__systemd_user_unit"]
-            target_label  = "unit"
-            regex         = "(.*);(.+)"
-            replacement   = "$2"
-          }
-          rule {
-            source_labels = ["__journal_container_name"]
-            target_label  = "container"
-          }
+        // some explanation to the next two rules.
+        // Important to notice that both have the same target_label: unit.
+        // if we would use only one rule with 2 source_labels, unfortunately only those
+        // labels will be kept where we have both source labels, so the root level services's log entries are gone.
+        // Regaring the 2nd rule's regex: "(.*);(.+)", we want to match only those where the __journal__systemd_user_unit
+        // is not empty, the regex matches and replaces the label with our $2 value which is the value of __journal__systemd_user_unit.
+        rule {
+          source_labels = ["__journal__systemd_unit"]
+          target_label  = "unit"
         }
 
-        loki.source.journal "journal" {
-          max_age = "12h"
-
-          labels = {
-            job  = "systemd-journal",
-            host = "${config.networking.hostName}",
-          }
-
-          forward_to = [loki.relabel.journal.receiver]
+        rule {
+          source_labels = ["__journal__systemd_unit", "__journal__systemd_user_unit"]
+          target_label  = "unit"
+          regex         = "(.*);(.+)"
+          replacement   = "$2"
         }
+      ${lib.optionalString config.virtualisation.docker.enable ''
+        rule {
+          source_labels = ["__journal_container_name"]
+          target_label  = "container"
+        }
+      ''}}
 
+      loki.source.journal "journal" {
+        max_age       = "12h"
+        labels        = {
+          job  = "systemd-journal",
+          host = "${config.networking.hostName}",
+        }
+        relabel_rules = loki.relabel.journal.rules
+        forward_to    = [loki.write.loki.receiver]
+      }
       ${lib.optionalString config.services.nginx.enable ''
-        loki.source.file "nginx_error_logs" {
-          targets = [{
-            __path__ = "/var/log/nginx/*error.log",
-            job      = "nginx-error-logs",
-            host     = "${config.networking.hostName}",
-          }]
 
-          forward_to = [loki.write.loki.receiver]
-        }
-      ''}
-    '';
+      local.file_match "nginx_error" {
+        path_targets = [{
+          __path__ = "/var/log/nginx/*error.log",
+          job      = "nginx-error-logs",
+          host     = "${config.networking.hostName}",
+        }]
+      }
 
-    # Add alloy user to nginx group for reading nginx error logs
-    users.groups.nginx.members = lib.mkIf config.services.nginx.enable [ "alloy" ];
+      loki.source.file "nginx_error" {
+        targets    = local.file_match.nginx_error.targets
+        forward_to = [loki.write.loki.receiver]
+      }
+      ''}'';
+
+    # Allow Alloy (runs as a DynamicUser, already in the systemd-journal group)
+    # to read nginx error logs.
+    systemd.services.alloy.serviceConfig.SupplementaryGroups =
+      lib.mkIf config.services.nginx.enable [ "nginx" ];
 
     # wait for wireguard before starting node-exporter
     systemd.services.prometheus-node-exporter.after = [ "wireguard-wg0.service" ];
