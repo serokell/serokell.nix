@@ -13,6 +13,7 @@ in
       "sweater"
       "sereja"
       "savely"
+      "alexey-danilevsky"
     ];
     apply = users: default ++ users;
   };
