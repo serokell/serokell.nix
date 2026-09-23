@@ -23,6 +23,7 @@ rec {
       "[skat.aquarius.serokell.team]:17788" = { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILyJ3GkPNLcFGYW46Y7k0SDTuNqIOse03nsNOu0OHLVT"; };
       "homam.pegasus.serokell.team" = { publicKey =  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEraUrGl1ovuPyKMeEJtG/XN3OlpSomq0FWhN1BIi2kZ"; };
       "morava.pegasus.serokell.team" = { publicKey =  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICoXmGW0mxq4emctkb06EoLOtDu+9mLKMDfy/qwQbVMB"; };
+      "[hub.serokell.team]:17788" = { publicKey =  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJWQ4cyszgrx8X3NrxxHdd7pxycw8vaMs8NJecOMwdSB"; };
     };
     knownHostsFiles = [
       (pkgs.writeText "github.keys" ''
