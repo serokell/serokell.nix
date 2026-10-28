@@ -34,6 +34,14 @@
     services.mysql.package = lib.mkOptionDefault pkgs.mariadb;
     services.postgresql.package = lib.mkOptionDefault pkgs.postgresql_12;
 
+    # Distrust the compromised eMudhra hierarchy, including the AAA cross-sign
+    # path. Intermediate revocations are not enforced by all TLS clients.
+    # https://bugzilla.mozilla.org/show_bug.cgi?id=2083449
+    security.pki.caCertificateBlacklist = [
+      "emSign ECC Root CA - G3"
+      "AAA Certificate Services"
+    ];
+
     security.sudo.wheelNeedsPassword = false;
 
     services.openssh = {
