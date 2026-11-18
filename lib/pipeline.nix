@@ -5,86 +5,65 @@
 { lib, nixpkgs, deploy-rs }:
 rec {
   mkPipeline = { deploy ? { nodes = { }; }, packages ? { }, checks ? { }, deployFromPipeline ? [ ], agents ? [ ]
-    , systems ? [ "x86_64-linux" ], ciSystem ? null, nixArgs ? [ ], ... }@args:
+    , systems ? [ "x86_64-linux" ], ciSystem ? null, nixArgs ? [ ], steps ? { }, validatesWithoutBuild ? true, ... }@args:
     let
       nixArgs' = (if length nixArgs == 0 then "" else " ") + (concatStringsSep " " nixArgs);
 
-      ciSystem' = if ciSystem == null then builtins.head systems else ciSystem;
-
-      pkgs = nixpkgs.legacyPackages.${ciSystem'};
-      inherit (lib)
-        getAttrFromPath collect concatStringsSep mapAttrsRecursiveCond
-        optionalAttrs optionalString concatMapStringsSep splitString last head
-        optional optionals escapeShellArg;
-      inherit (builtins)
-        concatMap length filter elemAt listToAttrs unsafeDiscardStringContext;
+      inherit (lib) getAttrFromPath concatStringsSep optionalAttrs optionalString optional optionals escapeShellArg concatLists mapAttrsToList;
+      inherit (builtins) concatMap length elemAt listToAttrs mapAttrs attrNames head;
 
       escapeAttrPath = path: escapeShellArg ''"${concatStringsSep ''"."'' path}"'';
 
-      nixBinPath = optionalString (packages ? ${ciSystem'}.nix) "${packages.${ciSystem'}.nix}/bin/";
+      nixBinPath = system: optionalString (packages ? ${system}.nix) "${packages.${system}.nix}/bin/";
 
-      namesTree =
-        mapAttrsRecursiveCond (x: !(lib.isDerivation x)) (path: _: path);
-      names = attrs: collect lib.isList (namesTree attrs);
+      names = attrs: concatLists (mapAttrsToList (n: v: map (x: [ n x ]) v) (mapAttrs (n: v: attrNames v) attrs));
 
-      filterNative = what:
-        listToAttrs (concatMap (system:
-          optional (args ? ${what} && args.${what} ? ${system}) {
-            name = system;
-            value = args.${what}.${system};
-          }) systems);
+      filterNative = what: listToAttrs (concatMap (system:
+        optional (args ? ${what} && args.${what} ? ${system}) {
+          name = system;
+          value = args.${what}.${system};
+        }) systems);
 
-      buildable = {
-        inherit deploy;
-        packages = filterNative "packages";
-      };
+      makeSteps = what: how: map (p: how ([ what ] ++ p) // { inherit agents; }) (names (filterNative what));
 
-      packageNames = filter (x: last x == "path" || head x == "packages")
-        (names buildable);
+      flakeCheckSteps = optionals (validatesWithoutBuild) (map (system: {
+        label = "Check flake (${system})";
+        command = "${nixBinPath system}nix flake check --no-build${nixArgs'}";
+      }) systems);
 
-      pathByValue = listToAttrs (map (path: {
-        name =
-          unsafeDiscardStringContext (getAttrFromPath path buildable).drvPath;
-        value = path;
-      }) packageNames);
-
-      drvFromPath = path: getAttrFromPath path buildable;
-
-      build = comp:
+      packagesSteps = makeSteps "packages" (path:
         let
-          drv = drvFromPath comp;
+          drv = getAttrFromPath path args;
           hasArtifacts = drv ? meta && drv.meta ? artifacts;
-          displayName = if head comp == "packages" then
-            elemAt comp 2
-          else
-            "${elemAt comp 2}.${elemAt comp 4}";
         in {
-          label = "Build ${displayName}";
-          command = "${nixBinPath}nix build .#${escapeAttrPath comp}${nixArgs'}";
-          inherit agents;
+          label = "Build ${elemAt path 2} (${elemAt path 1})";
+          command = "${nixBinPath (elemAt path 1)}nix build .#${escapeAttrPath path}${nixArgs'}";
         } // optionalAttrs hasArtifacts {
           artifact_paths = map (art: "result${art}") drv.meta.artifacts;
-        };
+        });
 
-      buildSteps = map build (builtins.attrValues pathByValue);
+      shellSteps = makeSteps "devShells" (path: {
+        label = "Build devShell ${elemAt path 2} (${elemAt path 1})";
+        command = "${nixBinPath (elemAt path 1)}nix build --no-link .#${escapeAttrPath path}${nixArgs'}";
+      });
 
-      checkNames = names { checks = filterNative "checks"; };
+      checkSteps = makeSteps "checks" (path: {
+        label = "Check ${elemAt path 2} (${elemAt path 1})";
+        command = "${nixBinPath (elemAt path 1)}nix build --no-link .#${escapeAttrPath path}${nixArgs'}";
+      });
 
-      check = name: {
-        label = elemAt name 2;
-          command = "${nixBinPath}nix build --no-link .#${escapeAttrPath name}${nixArgs'}";
-        inherit agents;
-      };
+      impureCheckSteps = makeSteps "steps" (path: {
+        label = "Impure check ${elemAt path 2} (${elemAt path 1})";
+        command = "eval \"$(nix build --no-link --json .#${escapeAttrPath path}${nixArgs'} | jq -r '.[0].outputs.out')\"";
+      });
 
-      checkSteps = map check checkNames;
-
-      doDeploy = { branch, node ? branch, profile, user ? "deploy", ... }: {
+      doDeploy = { branch, node ? branch, profile, user ? "deploy", ... }: let
+        nixArgs'' = (if length nixArgs == 0 then "" else " -- ") + (concatStringsSep " " nixArgs);
+      in {
         label = "Deploy ${branch} ${profile}";
         branches = [ branch ];
         command =
-          "${
-            deploy-rs.defaultApp.${head systems}.program
-          } ${lib.escapeShellArg ''.#"${node}"."${profile}"''} --ssh-user ${lib.escapeShellArg user} --fast-connection true";
+          "${deploy-rs.defaultApp.${head systems}.program} ${escapeShellArg ''.#"${node}"."${profile}"''} --ssh-user ${escapeShellArg user} --fast-connection true${nixArgs''}";
         inherit agents;
       };
 
@@ -93,7 +72,10 @@ rec {
       doRelease = {
         label = "Release";
         branches = args.releaseBranches or [ "master" ];
-        command = pkgs.writeShellScript "release" ''
+        command = let
+          ciSystem' = if ciSystem == null then head systems else ciSystem;
+          pkgs = nixpkgs.legacyPackages.${ciSystem'};
+        in pkgs.writeShellScript "release" ''
           set -euo pipefail
           export PATH='${pkgs.github-cli}/bin':"$PATH"
           nix build .#'release.${ciSystem'}${nixArgs'}'
@@ -111,7 +93,7 @@ rec {
 
       releaseSteps = optionals (args ? release) [ "wait" doRelease ];
 
-      steps = buildSteps ++ checkSteps ++ releaseSteps ++ deploySteps;
+      steps = flakeCheckSteps ++ packagesSteps ++ shellSteps ++ checkSteps ++ impureCheckSteps ++ releaseSteps ++ deploySteps;
     in { inherit steps; };
 
   mkPipelineFile = { systems ? [ "x86_64-linux" ], ... }@flake:
