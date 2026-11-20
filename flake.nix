@@ -54,6 +54,7 @@
         ];
       };
 
+      restart-policy-warnings = import ./modules/systemd-restart-policy-warnings.nix;
       acme-sh = import ./modules/acme-sh.nix;
       vault-secrets = import ./modules/vault-secrets.nix;
       serokell-users = import ./modules/serokell-users.nix;
@@ -84,6 +85,11 @@
       };
       checks = {
         docker = import ./tests/docker.nix (inputs // { inherit pkgs; });
+      } // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
+        restart-policy-warnings = import ./tests/restart-policy-warnings.nix {
+          inherit nixpkgs pkgs;
+          restartPolicyWarnings = self.nixosModules.restart-policy-warnings;
+        };
       };
     }
   ));

@@ -7,6 +7,7 @@
 {
   imports = [
     ./services/nginx.nix
+    ./systemd-restart-policy-warnings.nix
   ];
 
   options.services.nginx.addSecurityHeaders = lib.mkOption {
